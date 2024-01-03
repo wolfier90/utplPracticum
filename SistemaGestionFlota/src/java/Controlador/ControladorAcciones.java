@@ -1,0 +1,190 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Controlador;
+
+import Config.Utilitarios;
+import Modelo.FlotaVehicularDAO;
+import Modelo.PersonalPolicialDAO;
+import Modelo.Usuario;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.ParseException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ *
+ * @author USUARIO
+ */
+@WebServlet(name = "ControladorAcciones", urlPatterns = {"/ControladorAcciones"})
+public class ControladorAcciones extends HttpServlet {
+
+    Usuario us = new Usuario();
+    PersonalPolicialDAO personalDao = new PersonalPolicialDAO();
+    int ide;
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet ControladorAcciones</title>");
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet ControladorAcciones at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
+    public void procesaAccionPersonal(HttpServletRequest request, HttpServletResponse response, String accion)
+            throws ServletException, IOException {
+        switch (accion) {
+            case "Listar":
+                List lista = personalDao.listar();
+                request.setAttribute("personal", lista);
+                break;
+            case "Agregar":
+                Utilitarios util = new Utilitarios();
+                String nombre = request.getParameter("txtNombre");
+                String apellido = request.getParameter("txtApellido");
+                String identificacion = request.getParameter("txtIdent");
+                String fechaNac = request.getParameter("txtFechanac");
+                String correo = request.getParameter("txtCorreo");
+                String cargo = request.getParameter("cboCargo");
+                //if (util.validadorDeCedula(identificacion)) {
+                try {
+                    java.util.Date date = util.convertStringToDate(fechaNac);
+                    java.sql.Date sql_date = util.convertSqlDate(date);
+                    us.setNombres(nombre);
+                    us.setApellidos(apellido);
+                    us.setIdentificacion(identificacion);
+                    us.setFechaNacimiento(sql_date);
+                    us.setCorreo(correo);
+                    us.setCargo(cargo);
+                    personalDao.agregar(us);
+                } catch (ParseException ex) {
+                    Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                request.getRequestDispatcher("Controlador?menu=Personal&accion=Listar").forward(request, response);
+                break;
+            //}
+            case "Editar":
+                ide = Integer.parseInt(request.getParameter("id"));
+                Usuario u = personalDao.listarId(ide);
+                request.setAttribute("empleado", u);
+                request.getRequestDispatcher("Controlador?menu=Personal&accion=Listar").forward(request, response);
+                break;
+            case "Actualizar":
+                Utilitarios utilAct = new Utilitarios();
+                String nombreAct = request.getParameter("txtNombre");
+                String apellidoAct = request.getParameter("txtApellido");
+                String identificacionAct = request.getParameter("txtIdent");
+                String fechaNacAct = request.getParameter("txtFechanac");
+                String correoAct = request.getParameter("txtCorreo");
+                String cargoAct = request.getParameter("cboCargo");
+                //if (util.validadorDeCedula(identificacion)) {
+                try {
+                    java.util.Date date = utilAct.convertStringToDate(fechaNacAct);
+                    java.sql.Date sql_date = utilAct.convertSqlDate(date);
+                    us.setNombres(nombreAct);
+                    us.setApellidos(apellidoAct);
+                    us.setIdentificacion(identificacionAct);
+                    us.setFechaNacimiento(sql_date);
+                    us.setCorreo(correoAct);
+                    us.setCargo(cargoAct);
+                    us.setId(ide);
+                    personalDao.actualizar(us);
+                } catch (ParseException ex) {
+                    Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                request.getRequestDispatcher("Controlador?menu=Personal&accion=Listar").forward(request, response);
+                break;
+            case "Delete":
+                ide = Integer.parseInt(request.getParameter("id"));
+                personalDao.delete(ide);
+                request.getRequestDispatcher("Controlador?menu=Personal&accion=Listar").forward(request, response);
+                break;
+            default:
+                throw new AssertionError();
+        }
+        request.getRequestDispatcher("PersonalPolicial.jsp").forward(request, response);
+    }
+    
+    
+     public void procesaAccionVehiculo(HttpServletRequest request, HttpServletResponse response, String accion)
+            throws ServletException, IOException {
+          FlotaVehicularDAO flotaDAO = new FlotaVehicularDAO();
+         switch (accion) {
+            case "Listar":
+                List lista = flotaDAO.listar();
+                request.setAttribute("flotaVehicular", lista);
+                break;
+            case "Agregar":
+                request.getRequestDispatcher("Controlador?menu=Vehiculos&accion=Listar").forward(request, response);
+                break;
+            //}
+            case "Editar":
+                break;
+            case "Actualizar":
+                request.getRequestDispatcher("Controlador?menu=Vehiculos&accion=Listar").forward(request, response);
+                break;
+            case "Delete":
+                break;
+            default:
+                throw new AssertionError();
+        }
+        request.getRequestDispatcher("RegistrarVehiculo.jsp").forward(request, response);
+     }
+}
