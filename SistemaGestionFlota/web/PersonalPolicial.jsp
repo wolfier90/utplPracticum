@@ -43,7 +43,7 @@
                             <label>Cargo</label>
                             <!--<input type="text" value="${empleado.getCargo()}" name="txtCargo" class="form-control">-->
                             <div class="col-sm-4">
-                                <select id="cboCargo" name="cboCargo" style="width:150px">
+                                <select id="cboCargo" value="${empleado.getCargo()}" name="cboCargo" style="width:150px">
                                     <option value="LOGISTICA">LOGISTICA</option>
                                     <option value="ENCARGADO">ENCARGADO</option>
                                 </select>

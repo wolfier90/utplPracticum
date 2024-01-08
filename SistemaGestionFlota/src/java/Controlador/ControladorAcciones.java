@@ -6,6 +6,7 @@
 package Controlador;
 
 import Config.Utilitarios;
+import Modelo.FlotaVehicular;
 import Modelo.FlotaVehicularDAO;
 import Modelo.PersonalPolicialDAO;
 import Modelo.Usuario;
@@ -29,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ControladorAcciones extends HttpServlet {
 
     Usuario us = new Usuario();
+    FlotaVehicular fv = new FlotaVehicular();
     PersonalPolicialDAO personalDao = new PersonalPolicialDAO();
     int ide;
 
@@ -172,15 +174,72 @@ public class ControladorAcciones extends HttpServlet {
                 request.setAttribute("flotaVehicular", lista);
                 break;
             case "Agregar":
+                Utilitarios util = new Utilitarios();
+                String marca = request.getParameter("txtMarca");
+                String modelo = request.getParameter("txtModelo");
+                String placa = request.getParameter("txtPlaca");
+                String chasis = request.getParameter("txtChasis");
+                String color = request.getParameter("txtColor");
+                String tipoVehiculo = request.getParameter("cboTipoVehiculo");
+                int kilometraje =  Integer.parseInt(request.getParameter("txtKilometro"));
+                String fechaUltMant = request.getParameter("txtUltMant");
+                //if (util.validadorDeCedula(identificacion)) {
+                try {
+                    java.util.Date date = util.convertStringToDate(fechaUltMant);
+                    java.sql.Date sql_date = util.convertSqlDate(date);
+                    fv.setMarca(marca);
+                    fv.setModelo(modelo);
+                    fv.setPlaca(placa);
+                    fv.setChasis(chasis);
+                    fv.setColor(color);
+                    fv.setTipo(tipoVehiculo);
+                    fv.setKilometraje(kilometraje);
+                    fv.setFechaUltimoMant(sql_date);
+                    flotaDAO.agregar(fv);
+                } catch (ParseException ex) {
+                    Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 request.getRequestDispatcher("Controlador?menu=Vehiculos&accion=Listar").forward(request, response);
                 break;
             //}
             case "Editar":
+                ide = Integer.parseInt(request.getParameter("id"));
+                FlotaVehicular u = flotaDAO.listarId(ide);
+                request.setAttribute("vehiculo", u);
+                request.getRequestDispatcher("Controlador?menu=Vehiculos&accion=Listar").forward(request, response);
                 break;
             case "Actualizar":
+                Utilitarios utilAct = new Utilitarios();
+                String marcaAct = request.getParameter("txtMarca");
+                String modeloAct = request.getParameter("txtModelo");
+                String placaAct = request.getParameter("txtPlaca");
+                String chasisAct = request.getParameter("txtChasis");
+                String colorAct = request.getParameter("txtColor");
+                String tipoVehiculoAct = request.getParameter("cboTipoVehiculo");
+                int kilometrajeAct =  Integer.parseInt(request.getParameter("txtKilometro"));
+                String fechaUltMantAct = request.getParameter("txtUltMant");
+                try {
+                    java.util.Date date = utilAct.convertStringToDate(fechaUltMantAct);
+                    java.sql.Date sql_date = utilAct.convertSqlDate(date);
+                    fv.setMarca(marcaAct);
+                    fv.setModelo(modeloAct);
+                    fv.setPlaca(placaAct);
+                    fv.setChasis(chasisAct);
+                    fv.setColor(colorAct);
+                    fv.setTipo(tipoVehiculoAct);
+                    fv.setKilometraje(kilometrajeAct);
+                    fv.setFechaUltimoMant(sql_date);
+                    fv.setIdVehiculo(ide);
+                    flotaDAO.actualizar(fv);
+                } catch (ParseException ex) {
+                    Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 request.getRequestDispatcher("Controlador?menu=Vehiculos&accion=Listar").forward(request, response);
                 break;
             case "Delete":
+                ide = Integer.parseInt(request.getParameter("id"));
+                flotaDAO.delete(ide);
+                request.getRequestDispatcher("Controlador?menu=Vehiculos&accion=Listar").forward(request, response);
                 break;
             default:
                 throw new AssertionError();

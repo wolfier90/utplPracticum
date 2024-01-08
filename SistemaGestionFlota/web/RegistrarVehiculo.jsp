@@ -18,35 +18,43 @@
         <div class="d-flex">
             <div class="card col-sm-4">
                 <div class="card-body">
-                    <form action="Controlador?menu=Personal" method="POST">
+                    <form action="Controlador?menu=Vehiculos" method="POST">
                         <div class="form-group">  
                             <label>Marca</label>
-                            <input type="text" name="txtMarca" class="form-control">
+                            <input type="text" value="${vehiculo.getMarca()}" name="txtMarca" class="form-control">
                         </div>
                         <div class="form-group">  
                             <label>Modelo</label>
-                            <input type="text" name="txtModelo" class="form-control">
+                            <input type="text" value="${vehiculo.getModelo()}" name="txtModelo" class="form-control">
                         </div>
                         <div class="form-group">  
                             <label>Placa</label>
-                            <input type="text" name="txtPlaca" class="form-control">
+                            <input type="text" value="${vehiculo.getPlaca()}" name="txtPlaca" class="form-control">
                         </div>
                         <div class="form-group">  
                             <label>Chasis</label>
-                            <input type="text" name="txtChasis" class="form-control">
+                            <input type="text" value="${vehiculo.getChasis()}" name="txtChasis" class="form-control">
                         </div>
                         <div class="form-group">  
                             <label>Color</label>
-                            <input type="text" name="txtCorreo" class="form-control">
+                            <input type="text" value="${vehiculo.getColor()}" name="txtColor" class="form-control">
                         </div>
                         <div class="form-group">  
                             <label>Tipo</label>
                             <div class="col-sm-4">
-                                <select id="cboTipoVehiculo" name="cboTipoVehiculo" style="width:100px">
-                                    <option value="1">AUTO</option>
-                                    <option value="2">MOTO</option>
+                                <select id="cboTipoVehiculo" value="${vehiculo.getTipo()}" name="cboTipoVehiculo" style="width:100px">
+                                    <option value="AUTO">AUTO</option>
+                                    <option value="MOTO">MOTO</option>
                                 </select>
                             </div>
+                        </div>
+                        <div class="form-group">  
+                            <label>Kilometraje</label>
+                            <input type="text" value="${vehiculo.getKilometraje()}" name="txtKilometro" class="form-control">
+                        </div>
+                        <div class="form-group">  
+                            <label>Ultimo mantenimiento</label>
+                            <input type="date" value="${vehiculo.getFechaUltimoMant()}" name="txtUltMant" class="form-control">
                         </div>
                         <br></br>
                         <input type="submit" name="accion" value="Agregar" class="btn btn-info">
