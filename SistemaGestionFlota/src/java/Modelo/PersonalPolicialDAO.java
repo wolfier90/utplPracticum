@@ -49,6 +49,10 @@ public class PersonalPolicialDAO {
                     us.setFechaNacimiento(rs.getDate("fecha_nacimiento"));
                     us.setCorreo(rs.getString("correo"));
                     us.setCargo(rs.getString("cargo"));
+                    us.setTipoSangre(rs.getString("tipo_sangre"));
+                    us.setCiudadNacimiento(rs.getString("ciudad_nacimiento"));
+                    us.setCelular(rs.getString("celular"));
+                    us.setRango(rs.getString("rango"));
                     Lista.add(us);
                 }
             }
@@ -64,7 +68,7 @@ public class PersonalPolicialDAO {
     public int agregar(Usuario p) {
 
         //Se define la sentencia del SP
-        String sql = "{CALL pa_registrar_personal(?,?,?,?,?,?)}";
+        String sql = "{CALL pa_registrar_personal(?,?,?,?,?,?,?,?,?,?,?)}";
 
         try {
             con = cn.Conexion();
@@ -76,6 +80,11 @@ public class PersonalPolicialDAO {
             cs.setDate(4, (Date) p.getFechaNacimiento());
             cs.setString(5, p.getCorreo());
             cs.setString(6, p.getCargo());
+            cs.setString(7, p.getTipoSangre());
+            cs.setString(8, p.getCiudadNacimiento());
+            cs.setString(9, p.getCelular());
+            cs.setString(10, p.getRango());
+            cs.setInt(11, p.getIdVehiculo());
             //Obtener los resultados obtenidos de la ejecución
             rs = cn.ejecutarStoredProcedure(cs);
 
@@ -110,6 +119,10 @@ public class PersonalPolicialDAO {
                     user.setFechaNacimiento(rs.getDate("fecha_nacimiento"));
                     user.setCorreo(rs.getString("correo"));
                     user.setCargo(rs.getString("cargo"));
+                    user.setTipoSangre(rs.getString("tipo_sangre"));
+                    user.setCiudadNacimiento(rs.getString("ciudad_nacimiento"));
+                    user.setCelular(rs.getString("celular"));
+                    user.setRango(rs.getString("rango"));
                 }
             }
 
@@ -123,7 +136,7 @@ public class PersonalPolicialDAO {
 
     public int actualizar(Usuario p) {
         //Se define la sentencia del SP
-        String sql = "{CALL pa_actualizar_personal(?,?,?,?,?,?,?)}";
+        String sql = "{CALL pa_actualizar_personal(?,?,?,?,?,?,?,?,?,?,?)}";
 
         try {
             con = cn.Conexion();
@@ -136,6 +149,10 @@ public class PersonalPolicialDAO {
             cs.setDate(5, (Date) p.getFechaNacimiento());
             cs.setString(6, p.getCorreo());
             cs.setString(7, p.getCargo());
+            cs.setString(8, p.getTipoSangre());
+            cs.setString(9, p.getCiudadNacimiento());
+            cs.setString(10, p.getCelular());
+            cs.setString(11, p.getRango());
             rs = cn.ejecutarStoredProcedure(cs);
 
         } catch (SQLException e) {

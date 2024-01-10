@@ -75,7 +75,7 @@
                             <th>KILOMETRAJE</th>
                             <th>ULTIMO MANTENIMIENTO</th>
                             <th>ACCIONES</th>
-                        </tr>>
+                        </tr>
                     </thead>
                     <tbody>
                         <c:forEach var="fv" items="${flotaVehicular}">

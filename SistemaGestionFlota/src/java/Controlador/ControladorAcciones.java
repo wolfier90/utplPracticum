@@ -13,6 +13,7 @@ import Modelo.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -92,9 +93,10 @@ public class ControladorAcciones extends HttpServlet {
 
     public void procesaAccionPersonal(HttpServletRequest request, HttpServletResponse response, String accion)
             throws ServletException, IOException {
+        List lista = new ArrayList();
         switch (accion) {
             case "Listar":
-                List lista = personalDao.listar();
+                lista = personalDao.listar();
                 request.setAttribute("personal", lista);
                 break;
             case "Agregar":
@@ -105,6 +107,11 @@ public class ControladorAcciones extends HttpServlet {
                 String fechaNac = request.getParameter("txtFechanac");
                 String correo = request.getParameter("txtCorreo");
                 String cargo = request.getParameter("cboCargo");
+                String ciudadNac = request.getParameter("txtCiudadnac");
+                String tipoSangre = request.getParameter("cboSangre");
+                String celular = request.getParameter("txtCelular");
+                String rango = request.getParameter("cboRango");
+                int id_vehiculo = fv.getIdVehiculo();
                 //if (util.validadorDeCedula(identificacion)) {
                 try {
                     java.util.Date date = util.convertStringToDate(fechaNac);
@@ -115,6 +122,11 @@ public class ControladorAcciones extends HttpServlet {
                     us.setFechaNacimiento(sql_date);
                     us.setCorreo(correo);
                     us.setCargo(cargo);
+                    us.setCiudadNacimiento(ciudadNac);
+                    us.setTipoSangre(tipoSangre);
+                    us.setCelular(celular);
+                    us.setRango(rango);
+                    us.setIdVehiculo(id_vehiculo);
                     personalDao.agregar(us);
                 } catch (ParseException ex) {
                     Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
@@ -136,6 +148,10 @@ public class ControladorAcciones extends HttpServlet {
                 String fechaNacAct = request.getParameter("txtFechanac");
                 String correoAct = request.getParameter("txtCorreo");
                 String cargoAct = request.getParameter("cboCargo");
+                String ciudadNacAct = request.getParameter("txtCiudadnac");
+                String tipoSangreAct = request.getParameter("cboSangre");
+                String celularAct = request.getParameter("txtCelular");
+                String rangoAct = request.getParameter("cboRango");
                 //if (util.validadorDeCedula(identificacion)) {
                 try {
                     java.util.Date date = utilAct.convertStringToDate(fechaNacAct);
@@ -146,6 +162,10 @@ public class ControladorAcciones extends HttpServlet {
                     us.setFechaNacimiento(sql_date);
                     us.setCorreo(correoAct);
                     us.setCargo(cargoAct);
+                    us.setCiudadNacimiento(ciudadNacAct);
+                    us.setTipoSangre(tipoSangreAct);
+                    us.setCelular(celularAct);
+                    us.setRango(rangoAct);
                     us.setId(ide);
                     personalDao.actualizar(us);
                 } catch (ParseException ex) {
@@ -156,6 +176,14 @@ public class ControladorAcciones extends HttpServlet {
             case "Delete":
                 ide = Integer.parseInt(request.getParameter("id"));
                 personalDao.delete(ide);
+                request.getRequestDispatcher("Controlador?menu=Personal&accion=Listar").forward(request, response);
+                break;
+            case "BuscaVehiculo":
+                FlotaVehicularDAO flotaDAO = new FlotaVehicularDAO();
+                String placa = request.getParameter("codigovehiculo");
+                fv.setPlaca(placa);
+                fv = flotaDAO.buscar(placa);
+                request.setAttribute("flotaVehicular", fv);
                 request.getRequestDispatcher("Controlador?menu=Personal&accion=Listar").forward(request, response);
                 break;
             default:

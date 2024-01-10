@@ -10,7 +10,7 @@ import java.util.Date;
  *
  * @author cdierr
  */
-public class Usuario {
+public class Usuario extends FlotaVehicular{
     int id;
     String clave;
     String nombres;
@@ -21,12 +21,17 @@ public class Usuario {
     String identificacion;
     String cargo;
     Date fechaNacimiento;
-    
+    String tipoSangre;
+    String ciudadNacimiento;
+    String celular;
+    String rango;
 
     public Usuario(){    
     }
     
-    public Usuario(int id, String clave, String nombres, String apellidos, String correo, String estado, String user, String identificacion, String cargo, Date fechaNacimiento){
+    public Usuario(int id, String clave, String nombres, String apellidos, String correo, String estado, String user, 
+            String identificacion, String cargo, Date fechaNacimiento, String tipoSangre, String ciudadNacimiento,
+            String celular, String rango){
         this.id = id;
         this.clave = clave;
         this.nombres = nombres;
@@ -37,6 +42,10 @@ public class Usuario {
         this.identificacion = identificacion;
         this.cargo = cargo;
         this.fechaNacimiento = fechaNacimiento;
+        this.tipoSangre = tipoSangre;
+        this.ciudadNacimiento = ciudadNacimiento;
+        this.celular = celular;
+        this.rango = rango;
     }
 
     public int getId() {
@@ -118,8 +127,38 @@ public class Usuario {
     public void setFechaNacimiento(Date fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
-    
-    
+
+    public String getTipoSangre() {
+        return tipoSangre;
+    }
+
+    public void setTipoSangre(String tipoSangre) {
+        this.tipoSangre = tipoSangre;
+    }
+
+    public String getCiudadNacimiento() {
+        return ciudadNacimiento;
+    }
+
+    public void setCiudadNacimiento(String ciudadNacimiento) {
+        this.ciudadNacimiento = ciudadNacimiento;
+    }
+
+    public String getCelular() {
+        return celular;
+    }
+
+    public void setCelular(String celular) {
+        this.celular = celular;
+    }
+
+    public String getRango() {
+        return rango;
+    }
+
+    public void setRango(String rango) {
+        this.rango = rango;
+    }
     
 }
 

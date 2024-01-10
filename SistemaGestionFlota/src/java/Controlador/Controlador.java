@@ -45,6 +45,7 @@ public class Controlador extends HttpServlet {
             controladorAcciones.procesaAccionPersonal(request, response, accion);
         }
         if (menu.equals("Vehiculos")) {
+            //Procesa las acciones CRUD del menu Vehiculo
             controladorAcciones.procesaAccionVehiculo(request, response, accion);
         }
         if (menu.equals("Documentos")) {

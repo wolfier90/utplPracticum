@@ -28,17 +28,48 @@ public class FlotaVehicularDAO {
     CallableStatement cs;
     ResultSet rs;
     int respuesta;
+    
+    
+    public FlotaVehicular buscar(String placa){
+        FlotaVehicular flota = new FlotaVehicular();
+        String sql = "{CALL pa_obtener_vehiculo(?,?,?)}";
+        
+        try {
+            con = cn.Conexion();
+            //Se prepara el SP en el servidor de base de datos
+            cs = con.prepareCall(sql);
+            cs.setString(1, "PL");
+            cs.setInt(2, 0);
+            cs.setString(3, placa);
+            rs = cn.ejecutarStoredProcedure(cs);
 
+            if (rs != null) {
+                while (rs.next()) {
+                    flota.setIdVehiculo(rs.getInt("idflota_vehicular"));
+                    flota.setChasis(rs.getString("chasis"));
+                    flota.setModelo(rs.getString("modelo"));
+                }
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            cn.desconectar();
+        }
+        return flota;
+    }
+    
     //Operaciones CRUD
     public List listar() {
         //Se define la sentencia del SP
-        String sql = "{CALL pa_obtener_vehiculo(?)}";
+        String sql = "{CALL pa_obtener_vehiculo(?,?,?)}";
         List<FlotaVehicular> Lista = new ArrayList<>();
         try {
             con = cn.Conexion();
             //Se prepara el SP en el servidor de base de datos
             cs = con.prepareCall(sql);
-            cs.setInt(1, 0); //Le mandamos 0 para que traiga todos los registros sin filtrar
+            cs.setString(1, "ID");
+            cs.setInt(2, 0);  //Le mandamos 0 para que traiga todos los registros sin filtrar
+            cs.setString(3, "");
             //Obtener los resultados obtenidos de la ejecución
             rs = cn.ejecutarStoredProcedure(cs);
 
@@ -100,13 +131,15 @@ public class FlotaVehicularDAO {
 
         FlotaVehicular flota = new FlotaVehicular();
         //Se define la sentencia del SP
-        String sql = "{CALL pa_obtener_vehiculo(?)}";
+        String sql = "{CALL pa_obtener_vehiculo(?,?,?)}";
 
         try {
             con = cn.Conexion();
             //Se prepara el SP en el servidor de base de datos
             cs = con.prepareCall(sql);
-            cs.setInt(1, id);
+            cs.setString(1, "ID");
+            cs.setInt(2, id);
+            cs.setString(3, "");
             rs = cn.ejecutarStoredProcedure(cs);
 
             if (rs != null) {
