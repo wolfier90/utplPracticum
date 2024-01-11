@@ -25,13 +25,14 @@ public class Usuario extends FlotaVehicular{
     String ciudadNacimiento;
     String celular;
     String rango;
+    String mensajeSalida;
 
     public Usuario(){    
     }
     
     public Usuario(int id, String clave, String nombres, String apellidos, String correo, String estado, String user, 
             String identificacion, String cargo, Date fechaNacimiento, String tipoSangre, String ciudadNacimiento,
-            String celular, String rango){
+            String celular, String rango, String mensajeSalida){
         this.id = id;
         this.clave = clave;
         this.nombres = nombres;
@@ -46,6 +47,7 @@ public class Usuario extends FlotaVehicular{
         this.ciudadNacimiento = ciudadNacimiento;
         this.celular = celular;
         this.rango = rango;
+        this.mensajeSalida = mensajeSalida;
     }
 
     public int getId() {
@@ -159,6 +161,14 @@ public class Usuario extends FlotaVehicular{
     public void setRango(String rango) {
         this.rango = rango;
     }
-    
+
+    public String getMensajeSalida() {
+        return mensajeSalida;
+    }
+
+    public void setMensajeSalida(String mensajeSalida) {
+        this.mensajeSalida = mensajeSalida;
+    }
+
 }
 

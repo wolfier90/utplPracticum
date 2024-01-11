@@ -25,6 +25,7 @@ public class PersonalPolicialDAO {
     CallableStatement cs;
     ResultSet rs;
     int respuesta;
+    int codigoError;
 
     //Operaciones CRUD
     public List listar() {
@@ -68,8 +69,8 @@ public class PersonalPolicialDAO {
     public int agregar(Usuario p) {
 
         //Se define la sentencia del SP
-        String sql = "{CALL pa_registrar_personal(?,?,?,?,?,?,?,?,?,?,?)}";
-
+        String sql = "{CALL pa_registrar_personal(?,?,?,?,?,?,?,?,?,?,?,?)}";
+        
         try {
             con = cn.Conexion();
             //Se prepara el SP en el servidor de base de datos
@@ -85,16 +86,17 @@ public class PersonalPolicialDAO {
             cs.setString(9, p.getCelular());
             cs.setString(10, p.getRango());
             cs.setInt(11, p.getIdVehiculo());
-            //Obtener los resultados obtenidos de la ejecución
+            cs.registerOutParameter(12, java.sql.Types.INTEGER);
             rs = cn.ejecutarStoredProcedure(cs);
-
+            //Obtener los resultados de salida obtenidos de la ejecución
+            codigoError = cs.getInt(12);
         } catch (SQLException e) {
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, e);
         } finally {
             cn.desconectar();
         }
 
-        return respuesta;
+        return codigoError;
     }
 
     public Usuario listarId(int id) {

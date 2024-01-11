@@ -94,6 +94,7 @@ public class ControladorAcciones extends HttpServlet {
     public void procesaAccionPersonal(HttpServletRequest request, HttpServletResponse response, String accion)
             throws ServletException, IOException {
         List lista = new ArrayList();
+        int resultado;
         switch (accion) {
             case "Listar":
                 lista = personalDao.listar();
@@ -127,10 +128,15 @@ public class ControladorAcciones extends HttpServlet {
                     us.setCelular(celular);
                     us.setRango(rango);
                     us.setIdVehiculo(id_vehiculo);
-                    personalDao.agregar(us);
+                    us.setMensajeSalida("");
+                    resultado = personalDao.agregar(us);
+                    if (resultado == 1){
+                        us.setMensajeSalida("Vehículo a asignar supera el máximo de encargados");
+                    }
                 } catch (ParseException ex) {
                     Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                request.setAttribute("respuesta", us);
                 request.getRequestDispatcher("Controlador?menu=Personal&accion=Listar").forward(request, response);
                 break;
             //}

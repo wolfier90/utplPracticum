@@ -102,6 +102,9 @@
                         <br></br>
                         <input type="submit" name="accion" value="Agregar" class="btn btn-info">
                         <input type="submit" name="accion" value="Actualizar" class="btn btn-success">
+                        <div class="form-group">
+                            <input type="text" value="${respuesta.getMensajeSalida()}" name="txtMensaje" class="form-control" style="color: #F23006" disabled>
+                        </div>
                     </form>
                 </div>
             </div>

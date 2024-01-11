@@ -46,7 +46,7 @@ public class FlotaVehicularDAO {
             if (rs != null) {
                 while (rs.next()) {
                     flota.setIdVehiculo(rs.getInt("idflota_vehicular"));
-                    flota.setChasis(rs.getString("chasis"));
+                    flota.setChasis("Chasis: " + rs.getString("chasis"));
                     flota.setModelo(rs.getString("modelo"));
                 }
             }
