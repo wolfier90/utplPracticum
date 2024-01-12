@@ -40,6 +40,9 @@ public class Controlador extends HttpServlet {
         if (menu.equals("Principal")) {
             request.getRequestDispatcher("Principal.jsp").forward(request, response);
         }
+        if (menu.equals("PrincipalEncargado")) {
+            request.getRequestDispatcher("PrincipalEncargadoPolicial.jsp").forward(request, response);
+        }
         if (menu.equals("Personal")) {
             //Procesa las acciones CRUD del menu Personal
             controladorAcciones.procesaAccionPersonal(request, response, accion);
@@ -49,10 +52,10 @@ public class Controlador extends HttpServlet {
             controladorAcciones.procesaAccionVehiculo(request, response, accion);
         }
         if (menu.equals("Documentos")) {
-            request.getRequestDispatcher("Usuario.jsp").forward(request, response);
+            request.getRequestDispatcher("Mantenimientos.jsp").forward(request, response);
         }
         if (menu.equals("Reportes")) {
-            request.getRequestDispatcher("Vehiculo.jsp").forward(request, response);
+            request.getRequestDispatcher("Reportes.jsp").forward(request, response);
         }
     }
 

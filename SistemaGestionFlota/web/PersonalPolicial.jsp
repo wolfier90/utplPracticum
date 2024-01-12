@@ -114,6 +114,7 @@
                         <tr>
                             <th>NOMBRES</th>
                             <th>APELLIDOS</th>
+                            <th>VEHICULO</th>
                             <th>IDENTIFICACION</th>
                             <th>CORREO</th>
                             <th>NACIMIENTO</th>
@@ -130,6 +131,7 @@
                             <tr>
                                 <td>${pe.getNombres()}</td>
                                 <td>${pe.getApellidos()}</td>
+                                <td>${pe.getPlaca()}</td>
                                 <td>${pe.getIdentificacion()}</td>
                                 <td>${pe.getCorreo()}</td>
                                 <td>${pe.getFechaNacimiento()}</td>

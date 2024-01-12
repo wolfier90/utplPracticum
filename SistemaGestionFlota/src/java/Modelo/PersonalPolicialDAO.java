@@ -54,6 +54,7 @@ public class PersonalPolicialDAO {
                     us.setCiudadNacimiento(rs.getString("ciudad_nacimiento"));
                     us.setCelular(rs.getString("celular"));
                     us.setRango(rs.getString("rango"));
+                    us.setPlaca(rs.getString("placa"));
                     Lista.add(us);
                 }
             }
@@ -138,7 +139,7 @@ public class PersonalPolicialDAO {
 
     public int actualizar(Usuario p) {
         //Se define la sentencia del SP
-        String sql = "{CALL pa_actualizar_personal(?,?,?,?,?,?,?,?,?,?,?)}";
+        String sql = "{CALL pa_actualizar_personal(?,?,?,?,?,?,?,?,?,?,?,?)}";
 
         try {
             con = cn.Conexion();
@@ -155,6 +156,7 @@ public class PersonalPolicialDAO {
             cs.setString(9, p.getCiudadNacimiento());
             cs.setString(10, p.getCelular());
             cs.setString(11, p.getRango());
+            cs.setString(12, p.getPlaca());
             rs = cn.ejecutarStoredProcedure(cs);
 
         } catch (SQLException e) {

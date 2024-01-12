@@ -84,7 +84,12 @@ public class ControladorValidar extends HttpServlet {
             us = userDao.validar(user, pass);
             if(us.getUser()!=null){
                 request.setAttribute("usuario", us);
-                request.getRequestDispatcher("Controlador?menu=Principal").forward(request, response);
+                if(us.getCargo().equals("LOGISTICA")){
+                    request.getRequestDispatcher("Controlador?menu=Principal").forward(request, response);
+                }
+                else if(us.getCargo().equals("ENCARGADO")){
+                    request.getRequestDispatcher("Controlador?menu=PrincipalEncargado").forward(request, response);
+                }
             }else{
                 request.getRequestDispatcher("index.jsp").forward(request, response);
             }

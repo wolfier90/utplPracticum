@@ -133,6 +133,9 @@ public class ControladorAcciones extends HttpServlet {
                     if (resultado == 1){
                         us.setMensajeSalida("Vehículo a asignar supera el máximo de encargados");
                     }
+                    if (resultado == 2){
+                        us.setMensajeSalida("La identificación ingresada ya existe");
+                    }
                 } catch (ParseException ex) {
                     Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -158,6 +161,7 @@ public class ControladorAcciones extends HttpServlet {
                 String tipoSangreAct = request.getParameter("cboSangre");
                 String celularAct = request.getParameter("txtCelular");
                 String rangoAct = request.getParameter("cboRango");
+                String placaAct = request.getParameter("codigovehiculo");
                 //if (util.validadorDeCedula(identificacion)) {
                 try {
                     java.util.Date date = utilAct.convertStringToDate(fechaNacAct);
@@ -173,6 +177,7 @@ public class ControladorAcciones extends HttpServlet {
                     us.setCelular(celularAct);
                     us.setRango(rangoAct);
                     us.setId(ide);
+                    us.setPlaca(placaAct);
                     personalDao.actualizar(us);
                 } catch (ParseException ex) {
                     Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
