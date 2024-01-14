@@ -8,6 +8,10 @@ package Controlador;
 import Config.Utilitarios;
 import Modelo.FlotaVehicular;
 import Modelo.FlotaVehicularDAO;
+import Modelo.Mantenimiento;
+import Modelo.MantenimientoDAO;
+import Modelo.Ordenes;
+import Modelo.OrdenesDAO;
 import Modelo.PersonalPolicialDAO;
 import Modelo.Usuario;
 import java.io.IOException;
@@ -22,6 +26,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import static jdk.nashorn.internal.objects.NativeString.trim;
 
 /**
  *
@@ -130,10 +136,10 @@ public class ControladorAcciones extends HttpServlet {
                     us.setIdVehiculo(id_vehiculo);
                     us.setMensajeSalida("");
                     resultado = personalDao.agregar(us);
-                    if (resultado == 1){
+                    if (resultado == 1) {
                         us.setMensajeSalida("Vehículo a asignar supera el máximo de encargados");
                     }
-                    if (resultado == 2){
+                    if (resultado == 2) {
                         us.setMensajeSalida("La identificación ingresada ya existe");
                     }
                 } catch (ParseException ex) {
@@ -202,12 +208,11 @@ public class ControladorAcciones extends HttpServlet {
         }
         request.getRequestDispatcher("PersonalPolicial.jsp").forward(request, response);
     }
-    
-    
-     public void procesaAccionVehiculo(HttpServletRequest request, HttpServletResponse response, String accion)
+
+    public void procesaAccionVehiculo(HttpServletRequest request, HttpServletResponse response, String accion)
             throws ServletException, IOException {
-          FlotaVehicularDAO flotaDAO = new FlotaVehicularDAO();
-         switch (accion) {
+        FlotaVehicularDAO flotaDAO = new FlotaVehicularDAO();
+        switch (accion) {
             case "Listar":
                 List lista = flotaDAO.listar();
                 request.setAttribute("flotaVehicular", lista);
@@ -220,7 +225,7 @@ public class ControladorAcciones extends HttpServlet {
                 String chasis = request.getParameter("txtChasis");
                 String color = request.getParameter("txtColor");
                 String tipoVehiculo = request.getParameter("cboTipoVehiculo");
-                int kilometraje =  Integer.parseInt(request.getParameter("txtKilometro"));
+                int kilometraje = Integer.parseInt(request.getParameter("txtKilometro"));
                 String fechaUltMant = request.getParameter("txtUltMant");
                 //if (util.validadorDeCedula(identificacion)) {
                 try {
@@ -255,7 +260,7 @@ public class ControladorAcciones extends HttpServlet {
                 String chasisAct = request.getParameter("txtChasis");
                 String colorAct = request.getParameter("txtColor");
                 String tipoVehiculoAct = request.getParameter("cboTipoVehiculo");
-                int kilometrajeAct =  Integer.parseInt(request.getParameter("txtKilometro"));
+                int kilometrajeAct = Integer.parseInt(request.getParameter("txtKilometro"));
                 String fechaUltMantAct = request.getParameter("txtUltMant");
                 try {
                     java.util.Date date = utilAct.convertStringToDate(fechaUltMantAct);
@@ -284,5 +289,148 @@ public class ControladorAcciones extends HttpServlet {
                 throw new AssertionError();
         }
         request.getRequestDispatcher("RegistrarVehiculo.jsp").forward(request, response);
-     }
+    }
+
+    public void procesaAccionOrdenes(HttpServletRequest request, HttpServletResponse response, String accion)
+            throws ServletException, IOException {
+        HttpSession sesion = request.getSession(false);
+        HttpSession sesionOrden = request.getSession();
+        FlotaVehicularDAO flotaDAO = new FlotaVehicularDAO();
+        OrdenesDAO ordenesDAO = new OrdenesDAO();
+        String StringIdPersonal = (String) sesion.getAttribute("idPersonalPolicial");
+        int idPersonalPolicial = Integer.parseInt(StringIdPersonal);
+        List lista = new ArrayList();
+        int resultado;
+        switch (accion) {
+            case "Listar":
+                lista = ordenesDAO.listar(idPersonalPolicial);
+                request.setAttribute("Ordenes", lista);
+                Usuario u = flotaDAO.buscaVehiculoPersona(idPersonalPolicial);
+                request.setAttribute("MuestraVehiculo", u);
+                break;
+            case "MuestraVehiculo":
+                break;
+            case "Editar":
+                ide = Integer.parseInt(request.getParameter("idOrden"));
+                sesionOrden.setAttribute("idOrdenTrabajo", ide + "");
+                Ordenes ord = ordenesDAO.listarId(idPersonalPolicial, ide);
+                request.setAttribute("editaOrden", ord);
+                request.getRequestDispatcher("Controlador?menu=Ordenes&accion=Listar").forward(request, response);
+                break;
+            case "RegistrarOrden":
+                Ordenes ordenes = new Ordenes();
+                Utilitarios util = new Utilitarios();
+                String fechaMant = request.getParameter("txtFechaMant");
+                int kilometraje = Integer.parseInt(request.getParameter("txtKilometraje"));
+                String observaciones = request.getParameter("txtObservaciones");
+                //if (util.validadorDeCedula(identificacion)) {
+                try {
+                    java.util.Date date = util.convertStringToDate(fechaMant);
+                    java.sql.Date sql_date = util.convertSqlDate(date);
+                    ordenes.setEstado("I");
+                    ordenes.setIdPersonalPolicial(idPersonalPolicial);
+                    ordenes.setFechaInicio(sql_date);
+                    ordenes.setKilometrajeActual(kilometraje);
+                    ordenes.setObservaciones(observaciones);
+                    resultado = ordenesDAO.agregar(ordenes);
+                    if (resultado == 1) {
+                        ordenes.setMensajeSalida("Ya existe una orden ingresada en proceso");
+                    }
+                } catch (ParseException ex) {
+                    Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                request.setAttribute("AgregaOrden", ordenes);
+                request.getRequestDispatcher("Controlador?menu=Ordenes&accion=Listar").forward(request, response);
+                break;
+            case "Delete":
+                ide = Integer.parseInt(request.getParameter("idOrden"));
+                ordenesDAO.delete(ide);
+                request.getRequestDispatcher("Controlador?menu=Ordenes&accion=Listar").forward(request, response);
+                break;
+            case "Actualizar":
+                String StringIdOrden = (String) sesionOrden.getAttribute("idOrdenTrabajo");
+                int idOrdenTrabajo = Integer.parseInt(StringIdOrden);
+                Ordenes ordAct = new Ordenes();
+                Utilitarios utilAct = new Utilitarios();
+                String fechaMantAct = request.getParameter("txtFechaMant");
+                int kilometrajeAct = Integer.parseInt(request.getParameter("txtKilometraje"));
+                String observacionesAct = request.getParameter("txtObservaciones");
+                try {
+                    java.util.Date date = utilAct.convertStringToDate(fechaMantAct);
+                    java.sql.Date sql_date = utilAct.convertSqlDate(date);
+                    ordAct.setIdOrdenTrabajo(idOrdenTrabajo);
+                    ordAct.setFechaInicio(sql_date);
+                    ordAct.setKilometrajeActual(kilometrajeAct);
+                    ordAct.setObservaciones(observacionesAct);
+                    ordenesDAO.actualizar(ordAct);
+                } catch (ParseException ex) {
+                    Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                request.getRequestDispatcher("Controlador?menu=Ordenes&accion=Listar").forward(request, response);
+                break;
+            default:
+                throw new AssertionError();
+        }
+        request.getRequestDispatcher("Ordenes.jsp").forward(request, response);
+    }
+
+    public void procesaAccionAprobacion(HttpServletRequest request, HttpServletResponse response, String accion)
+            throws ServletException, IOException {
+        MantenimientoDAO mantDAO = new MantenimientoDAO();
+        Mantenimiento mnt = new Mantenimiento();
+        HttpSession sesionOrden = request.getSession();
+        List lista = new ArrayList();
+        int resultado;
+        switch (accion) {
+            case "Listar":
+                lista = mantDAO.listar();
+                request.setAttribute("Ordenes", lista);
+                break;
+            case "Editar":
+                ide = Integer.parseInt(request.getParameter("idOrden"));
+                sesionOrden.setAttribute("idOrdenTrabajo", ide + "");
+                mnt = mantDAO.listarId(0, ide);
+                request.setAttribute("editaOrden", mnt);
+                request.getRequestDispatcher("Controlador?menu=Aprobacion&accion=Listar").forward(request, response);
+                break;
+            case "RegistrarAprobacion":
+                Utilitarios util = new Utilitarios();
+                String chkMnt1 = request.getParameter("mntA");
+                String chkMnt2 = request.getParameter("mntB");
+                String chkMnt3 = request.getParameter("mntC");
+
+                if (trim(chkMnt1).equals("1") && trim(chkMnt2).equals("2")) {
+                    mnt.setMensajeSalida("No puede escoger el mantenimiento 1 y 2 a la vez");
+                } else {
+                    String idOrdenTrabajo = (String) request.getParameter("txtOrden");
+                    String fechaIngreso = request.getParameter("txtFechaIngreso");
+                    int kilometrajeIngreso = Integer.parseInt(request.getParameter("txtKilometrajeIngreso"));
+
+                    try {
+                        java.util.Date date = util.convertStringToDate(fechaIngreso);
+                        java.sql.Date sql_date = util.convertSqlDate(date);
+                        mnt.setIdOrdenTrabajo(Integer.parseInt(idOrdenTrabajo));
+                        mnt.setFechaIngreso(sql_date);
+                        mnt.setKilometrajeIngreso(kilometrajeIngreso);
+                        mnt.setMantenimiento1(chkMnt1);
+                        mnt.setMantenimiento2(chkMnt2);
+                        mnt.setMantenimiento3(chkMnt3);
+                        /*
+                        resultado = ordenesDAO.agregar(ordenes);
+                        if (resultado == 1) {
+                            ordenes.setMensajeSalida("Ya existe una orden ingresada en proceso");
+                        }
+                         */
+                    } catch (ParseException ex) {
+                        Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                request.setAttribute("ApruebaOrden", mnt);
+                request.getRequestDispatcher("Controlador?menu=Aprobacion&accion=Listar").forward(request, response);
+                break;
+            default:
+                throw new AssertionError();
+        }
+        request.getRequestDispatcher("AprobacionSolicitud.jsp").forward(request, response);
+    }
 }

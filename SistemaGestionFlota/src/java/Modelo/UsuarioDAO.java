@@ -22,7 +22,7 @@ public class UsuarioDAO {
     
     public Usuario validar(String usuario, String clave){
         Usuario user = new Usuario();
-        String sql = "select u.*, b.nombre, b.apellido, b.correo, p.cargo from usuario u "
+        String sql = "select u.*, b.nombre, b.apellido, b.correo, p.cargo, p.idpersonal_policial from usuario u "
                 + "inner join personal_policial p on u.id_personal_policial = p.idpersonal_policial "
                 + "inner join persona b on p.id_persona = b.id_persona "
                 + " where nombre_usuario=? "
@@ -39,6 +39,7 @@ public class UsuarioDAO {
                 user.setNombres(rs.getString("nombre")+ " " + rs.getString("apellido"));
                 user.setCorreo(rs.getString("correo"));
                 user.setCargo(rs.getString("cargo"));
+                user.setId(rs.getInt("idpersonal_policial"));
             }
             
         } catch(Exception e) {

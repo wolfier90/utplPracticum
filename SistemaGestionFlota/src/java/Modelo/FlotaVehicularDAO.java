@@ -28,6 +28,7 @@ public class FlotaVehicularDAO {
     CallableStatement cs;
     ResultSet rs;
     int respuesta;
+    int codigoError;
     
     
     public FlotaVehicular buscar(String placa){
@@ -208,6 +209,36 @@ public class FlotaVehicularDAO {
         } finally {
             cn.desconectar();
         }
+    }
+    
+    public Usuario buscaVehiculoPersona(int idPersonal) {
+
+        //Se define la sentencia del SP
+        String sql = "{CALL pa_obtener_vehiculo_personal(?)}";
+        Usuario usuario = new Usuario();
+        
+        try {
+            con = cn.Conexion();
+            //Se prepara el SP en el servidor de base de datos
+            cs = con.prepareCall(sql);
+            cs.setInt(1, idPersonal);
+            rs = cn.ejecutarStoredProcedure(cs);
+            //Obtener los resultados de salida obtenidos de la ejecución
+            if (rs != null) {
+                while (rs.next()) {
+                    usuario.setPlaca(rs.getString("placa"));
+                    usuario.setCodigoError(rs.getInt("codigo_error"));
+                    usuario.setMensajeSalida(rs.getString("mensaje_error"));
+                }
+            }
+            
+        } catch (SQLException e) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            cn.desconectar();
+        }
+
+        return usuario;
     }
     
 }

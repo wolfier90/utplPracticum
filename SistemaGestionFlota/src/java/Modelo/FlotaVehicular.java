@@ -13,7 +13,7 @@ import java.util.Date;
  *
  * @author USUARIO
  */
-public class FlotaVehicular {
+public class FlotaVehicular{
     int idVehiculo;
     String chasis;
     String color;

@@ -51,8 +51,13 @@ public class Controlador extends HttpServlet {
             //Procesa las acciones CRUD del menu Vehiculo
             controladorAcciones.procesaAccionVehiculo(request, response, accion);
         }
-        if (menu.equals("Documentos")) {
-            request.getRequestDispatcher("Mantenimientos.jsp").forward(request, response);
+        if (menu.equals("Ordenes")) {
+            controladorAcciones.procesaAccionOrdenes(request, response, accion);
+            request.getRequestDispatcher("Ordenes.jsp").forward(request, response);
+        }
+        if (menu.equals("Aprobacion")) {
+            controladorAcciones.procesaAccionAprobacion(request, response, accion);
+            request.getRequestDispatcher("AprobacionSolicitud.jsp").forward(request, response);
         }
         if (menu.equals("Reportes")) {
             request.getRequestDispatcher("Reportes.jsp").forward(request, response);

@@ -14,16 +14,12 @@
                         <li class="nav-item">
                             <a style="margin-left: 10px; border: none" class="btn btn-outline-light" href="#">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a style="margin-left: 10px; border: none" class="btn btn-outline-light" href="Controlador?menu=Documentos" target="myFrame">Documentos</a>
-                        </li>
                         <div class="dropdown">
                             <button style="border: none; width: 200px" class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
                                 Mantenimientos
                             </button>
                             <div class="dropdown-menu text-center">
-                                <a style="margin-left: 10px; border: none" class="dropdown-item" href="Controlador?menu=Documentos" target="myFrame">Generar ordenes de trabajo</a>
-                                <a style="margin-left: 10px; border: none" class="dropdown-item" href="Controlador?menu=Reportes" target="myFrame">Reportes</a>
+                                <a style="margin-left: 10px; border: none" class="dropdown-item" href="Controlador?menu=Ordenes&accion=Listar" target="myFrame">Solicitud de Mantenimiento</a>
                             </div>
                         </div>
                     </ul>
