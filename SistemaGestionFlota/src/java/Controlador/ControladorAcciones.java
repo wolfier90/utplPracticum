@@ -13,6 +13,8 @@ import Modelo.MantenimientoDAO;
 import Modelo.Ordenes;
 import Modelo.OrdenesDAO;
 import Modelo.PersonalPolicialDAO;
+import Modelo.Reclamo;
+import Modelo.ReclamoDAO;
 import Modelo.Usuario;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -380,6 +382,10 @@ public class ControladorAcciones extends HttpServlet {
         Mantenimiento mnt = new Mantenimiento();
         HttpSession sesionOrden = request.getSession();
         List lista = new ArrayList();
+        HttpSession sesion = request.getSession(false);
+        String StringIdAprobador = (String) sesion.getAttribute("idPersonalPolicial");
+        int idAprobador = Integer.parseInt(StringIdAprobador);
+
         int resultado;
         switch (accion) {
             case "Listar":
@@ -395,42 +401,123 @@ public class ControladorAcciones extends HttpServlet {
                 break;
             case "RegistrarAprobacion":
                 Utilitarios util = new Utilitarios();
+                Mantenimiento salidaAprobacion = new Mantenimiento();
                 String chkMnt1 = request.getParameter("mntA");
                 String chkMnt2 = request.getParameter("mntB");
                 String chkMnt3 = request.getParameter("mntC");
 
+                String StringOrden = (String) sesion.getAttribute("idOrdenTrabajo");
+                int ordenPendiente = Integer.parseInt(StringOrden);
+
+                if (chkMnt1 == null) {
+                    chkMnt1 = "";
+                }
+                if (chkMnt2 == null) {
+                    chkMnt2 = "";
+                }
+                if (chkMnt3 == null) {
+                    chkMnt3 = "";
+                }
+
                 if (trim(chkMnt1).equals("1") && trim(chkMnt2).equals("2")) {
                     mnt.setMensajeSalida("No puede escoger el mantenimiento 1 y 2 a la vez");
                 } else {
-                    String idOrdenTrabajo = (String) request.getParameter("txtOrden");
+                    int idOrdenTrabajo = ordenPendiente;
                     String fechaIngreso = request.getParameter("txtFechaIngreso");
                     int kilometrajeIngreso = Integer.parseInt(request.getParameter("txtKilometrajeIngreso"));
-
                     try {
                         java.util.Date date = util.convertStringToDate(fechaIngreso);
                         java.sql.Date sql_date = util.convertSqlDate(date);
-                        mnt.setIdOrdenTrabajo(Integer.parseInt(idOrdenTrabajo));
-                        mnt.setFechaIngreso(sql_date);
+                        mnt.setIdOrdenTrabajo(idOrdenTrabajo);
                         mnt.setKilometrajeIngreso(kilometrajeIngreso);
+                        mnt.setFechaIngreso(sql_date);
                         mnt.setMantenimiento1(chkMnt1);
                         mnt.setMantenimiento2(chkMnt2);
                         mnt.setMantenimiento3(chkMnt3);
-                        /*
-                        resultado = ordenesDAO.agregar(ordenes);
-                        if (resultado == 1) {
-                            ordenes.setMensajeSalida("Ya existe una orden ingresada en proceso");
+                        salidaAprobacion = mantDAO.agregar(mnt, idAprobador);
+                        if (salidaAprobacion.getCodigoError() == 1) {
+                            mnt.setMensajeSalida("Ha ocurrido un error en la base del sistema");
                         }
-                         */
                     } catch (ParseException ex) {
                         Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
                 request.setAttribute("ApruebaOrden", mnt);
+                request.setAttribute("ValorTotal", salidaAprobacion);
+                request.getRequestDispatcher("Controlador?menu=Aprobacion&accion=Listar").forward(request, response);
+                break;
+            case "Rechazar":
+                OrdenesDAO ordenesDAO = new OrdenesDAO();
+                ide = Integer.parseInt(request.getParameter("idOrden"));
+                ordenesDAO.delete(ide);
                 request.getRequestDispatcher("Controlador?menu=Aprobacion&accion=Listar").forward(request, response);
                 break;
             default:
                 throw new AssertionError();
         }
         request.getRequestDispatcher("AprobacionSolicitud.jsp").forward(request, response);
+    }
+
+    public void procesaAccionFinalizar(HttpServletRequest request, HttpServletResponse response, String accion)
+            throws ServletException, IOException {
+        MantenimientoDAO mantDAO = new MantenimientoDAO();
+        OrdenesDAO ordenesDAO = new OrdenesDAO();
+        List lista = new ArrayList();
+        if (accion == null) {
+            request.getRequestDispatcher("Controlador?menu=Finalizar&accion=Listar").forward(request, response);
+        } else {
+            switch (accion) {
+                case "Listar":
+                    lista = mantDAO.listarAprobadas();
+                    request.setAttribute("Ordenes", lista);
+                    break;
+                case "Finalizar":
+                    ide = Integer.parseInt(request.getParameter("idOrden"));
+                    ordenesDAO.finalizar(ide);
+                    request.getRequestDispatcher("Controlador?menu=Finalizar&accion=Listar").forward(request, response);
+                    break;
+                default:
+                    throw new AssertionError();
+            }
+        }
+        request.getRequestDispatcher("FinalizarMantenimientos.jsp").forward(request, response);
+    }
+
+    public void procesaAccionReclamo(HttpServletRequest request, HttpServletResponse response, String accion)
+            throws ServletException, IOException {
+        ReclamoDAO reclamoDAO = new ReclamoDAO();
+        List lista = new ArrayList();
+            switch (accion) {
+                case "Salir":
+                    request.getRequestDispatcher("index.jsp").forward(request, response);
+                    break;
+                case "Reclamo":
+                    request.getRequestDispatcher("Reclamos.jsp").forward(request, response);
+                    break;
+                case "Registrar":
+                    Reclamo reclamo = new Reclamo();
+                    int circuito = Integer.parseInt(request.getParameter("txtCircuito"));
+                    int subCircuito = Integer.parseInt(request.getParameter("txtSubcircuito"));
+                    String tipo = request.getParameter("cboTipo");
+                    String detalle = request.getParameter("txtDetalle");
+                    String contacto = request.getParameter("txtContacto");
+                    String Apellidos = request.getParameter("txtApellidos");
+                    String Nombres = request.getParameter("txtNombres");
+                    reclamo.setIdCircuito(circuito);
+                    reclamo.setIdSubCircuito(subCircuito);
+                    reclamo.setTipoReclamo(tipo);
+                    reclamo.setDetalle(detalle);
+                    reclamo.setContacto(contacto);
+                    reclamo.setApellidos(Apellidos);
+                    reclamo.setNombres(Nombres);
+                    reclamoDAO.agregar(reclamo);
+                    reclamo.setMensajeSalida("Registro exitoso");
+                    request.setAttribute("Reclamo", reclamo);
+                    request.getRequestDispatcher("Controlador?menu=Reclamo&accion=Reclamo").forward(request, response);
+                    break;
+                default:
+                    throw new AssertionError();
+            }
+        request.getRequestDispatcher("Reclamos.jsp").forward(request, response);
     }
 }

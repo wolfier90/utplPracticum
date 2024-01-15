@@ -16,16 +16,21 @@ public class Mantenimiento extends Ordenes{
     String Mantenimiento1;
     String Mantenimiento2;
     String Mantenimiento3;
+    float valorTotal;
+    String tipoMantenimiento;
 
     public Mantenimiento(){    
     }
     
-    public Mantenimiento(int kilometrajeIngreso, Date fechaIngreso, String Mantenimiento1, String Mantenimiento2, String Mantenimiento3){
+    public Mantenimiento(int kilometrajeIngreso, Date fechaIngreso, String Mantenimiento1, String Mantenimiento2, 
+            String Mantenimiento3, float valorTotal, String tipoMantenimiento){
         this.kilometrajeIngreso = kilometrajeIngreso;
         this.fechaIngreso = fechaIngreso;
         this.Mantenimiento1 = Mantenimiento1;
         this.Mantenimiento2 = Mantenimiento2;
         this.Mantenimiento3 = Mantenimiento3;
+        this.valorTotal = valorTotal;
+        this.tipoMantenimiento = tipoMantenimiento;
     }
 
     public int getKilometrajeIngreso() {
@@ -66,6 +71,22 @@ public class Mantenimiento extends Ordenes{
 
     public void setMantenimiento3(String Mantenimiento3) {
         this.Mantenimiento3 = Mantenimiento3;
+    }
+
+    public float getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(float valorTotal) {
+        this.valorTotal = valorTotal;
+    }
+
+    public String getTipoMantenimiento() {
+        return tipoMantenimiento;
+    }
+
+    public void setTipoMantenimiento(String tipoMantenimiento) {
+        this.tipoMantenimiento = tipoMantenimiento;
     }
 
 }

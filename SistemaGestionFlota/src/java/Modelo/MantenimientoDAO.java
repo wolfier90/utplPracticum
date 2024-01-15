@@ -97,4 +97,73 @@ public class MantenimientoDAO {
         return mant;
     }
     
+    public Mantenimiento agregar(Mantenimiento mnt, int idAprobador) {
+
+        //Se define la sentencia del SP
+        Mantenimiento datosRegistro = new Mantenimiento();
+        String sql = "{CALL pa_registrar_mantenimiento(?,?,?,?,?,?,?,?,?)}";
+
+        try {
+            con = cn.Conexion();
+            //Se prepara el SP en el servidor de base de datos
+            cs = con.prepareCall(sql);
+            cs.setInt(1, mnt.getIdOrdenTrabajo());
+            cs.setInt(2, mnt.getKilometrajeIngreso());
+            cs.setDate(3, (Date) mnt.getFechaIngreso());
+            cs.setInt(4, idAprobador);
+            cs.setString(5, mnt.getMantenimiento1());
+            cs.setString(6, mnt.getMantenimiento2());
+            cs.setString(7, mnt.getMantenimiento3());
+            cs.registerOutParameter(8, java.sql.Types.DOUBLE);
+            cs.registerOutParameter(9, java.sql.Types.INTEGER);
+            //Obtener los resultados obtenidos de la ejecución
+            rs = cn.ejecutarStoredProcedure(cs);
+            datosRegistro.setValorTotal(cs.getFloat(8));
+            datosRegistro.setCodigoError(cs.getInt(9));
+        } catch (SQLException e) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            cn.desconectar();
+        }
+        return datosRegistro;
+    }
+
+    public List listarAprobadas() {
+        //Se define la sentencia del SP
+        String sql = "{CALL pa_consulta_ordenes(?,?,?)}";
+        List<Ordenes> Lista = new ArrayList<>();
+        try {
+            con = cn.Conexion();
+            //Se prepara el SP en el servidor de base de datos
+            cs = con.prepareCall(sql);
+            cs.setString(1, "A"); // Trae todas las ordenes aprobadas
+            cs.setInt(2, 0);
+            cs.setInt(3, 0);
+            //Obtener los resultados obtenidos de la ejecución
+            rs = cn.ejecutarStoredProcedure(cs);
+
+            if (rs != null) {
+                while (rs.next()) {
+                    Mantenimiento mnt = new Mantenimiento();
+                    mnt.setIdOrdenTrabajo(rs.getInt("id_orden_trabajo"));
+                    mnt.setEstado(rs.getString("estado"));
+                    mnt.setIdPersonalPolicial(rs.getInt("idpersonal_policial"));
+                    mnt.setKilometrajeActual(rs.getInt("kilometraje_Actual"));
+                    mnt.setObservaciones(rs.getString("observaciones"));
+                    mnt.setFechaInicio(rs.getDate("fecha_inicio"));
+                    mnt.setPlaca(rs.getString("placa"));
+                    mnt.setIdentificacionEncargado(rs.getString("identificacion"));
+                    mnt.setTipoMantenimiento(rs.getString("tipo_mantenimiento"));
+                    mnt.setValorTotal(rs.getFloat("valor_total"));
+                    Lista.add(mnt);
+                }
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            cn.desconectar();
+        }
+        return Lista;
+    }
+    
 }

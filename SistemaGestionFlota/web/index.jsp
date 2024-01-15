@@ -24,7 +24,8 @@
                             <label>Password:</label>
                             <input type="password" name="txtpass" class="form-control">
                         </div>
-                        <input type="submit" name="accion" value="Ingresar" class="btn btn-primary btn-block">
+                        <button type="submit" name="accion" value="Ingresar" class="btn btn-primary btn-block">Ingresar al Sistema</button> <br></br>
+                        <button type="submit" name="accion" value="Reclamo" class="btn btn-danger">Desea registrar una sugerencia?</button>
                     </form>
                 </div>
             </div>

@@ -18,6 +18,7 @@ public class Ordenes extends FlotaVehicular{
     String observaciones;
     Date fechaInicio;
     Date fechaModificacion;
+    String identificacionEncargado;
     String mensajeSalida;
     int codigoError;
 
@@ -25,7 +26,7 @@ public class Ordenes extends FlotaVehicular{
     }
     
     public Ordenes(int idOrdenTrabajo, String estado, int idPersonalPolicial, int kilometrajeActual, String observaciones,
-            Date fechaInicio, Date fechaModificacion, String mensajeSalida, int codigoError){
+            Date fechaInicio, Date fechaModificacion, String identificacionEncargado, String mensajeSalida, int codigoError){
         this.idOrdenTrabajo	= idOrdenTrabajo;
         this.estado   = estado;
         this.idPersonalPolicial          = idPersonalPolicial;
@@ -33,6 +34,7 @@ public class Ordenes extends FlotaVehicular{
         this.observaciones      = observaciones;
         this.fechaInicio        = fechaInicio;
         this.fechaModificacion  = fechaModificacion;
+        this.identificacionEncargado = identificacionEncargado;
         this.mensajeSalida      = mensajeSalida;
         this.codigoError        = codigoError;
     }
@@ -109,7 +111,13 @@ public class Ordenes extends FlotaVehicular{
         this.codigoError = codigoError;
     }
 
-    
+    public String getIdentificacionEncargado() {
+        return identificacionEncargado;
+    }
+
+    public void setIdentificacionEncargado(String identificacionEncargado) {
+        this.identificacionEncargado = identificacionEncargado;
+    }
 
 }
 

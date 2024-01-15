@@ -6,6 +6,7 @@
 package Modelo;
 
 import Config.Conexion;
+import Config.Utilitarios;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
@@ -155,6 +156,24 @@ public class OrdenesDAO {
             cs.setInt(2, ord.getKilometrajeActual());
             cs.setString(3, ord.getObservaciones());
             cs.setDate(4, (Date) ord.getFechaInicio());
+            rs = cn.ejecutarStoredProcedure(cs);
+        } catch (SQLException e) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            cn.desconectar();
+        }
+
+        return respuesta;
+    }
+    
+    public int finalizar(int idOrdenTrabajo) {
+        //Se define la sentencia del SP
+        String sql = "{CALL pa_finalizar_orden(?)}";
+        try {
+            con = cn.Conexion();
+            //Se prepara el SP en el servidor de base de datos
+            cs = con.prepareCall(sql);
+            cs.setInt(1, idOrdenTrabajo);
             rs = cn.ejecutarStoredProcedure(cs);
         } catch (SQLException e) {
             Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, e);

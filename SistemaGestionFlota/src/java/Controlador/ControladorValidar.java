@@ -30,10 +30,9 @@ public class ControladorValidar extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    
     UsuarioDAO userDao = new UsuarioDAO();
     Usuario us = new Usuario();
-    
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -42,7 +41,7 @@ public class ControladorValidar extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Validar</title>");            
+            out.println("<title>Servlet Validar</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet Validar at " + request.getContextPath() + "</h1>");
@@ -79,26 +78,26 @@ public class ControladorValidar extends HttpServlet {
             throws ServletException, IOException {
         //processRequest(request, response);
         HttpSession sesion = request.getSession();
-        String accion=request.getParameter("accion");
-        if(accion.equalsIgnoreCase("Ingresar")){
-            String user=request.getParameter("txtuser");
-            String pass=request.getParameter("txtpass");
+        String accion = request.getParameter("accion");
+        if (accion.equalsIgnoreCase("Ingresar")) {
+            String user = request.getParameter("txtuser");
+            String pass = request.getParameter("txtpass");
             us = userDao.validar(user, pass);
-            String idPersonal = us.getId()+"";
+            String idPersonal = us.getId() + "";
             sesion.setAttribute("idPersonalPolicial", idPersonal);
-            if(us.getUser()!=null){
+            if (us.getUser() != null) {
                 request.setAttribute("usuario", us);
-                if(us.getCargo().equals("LOGISTICA")){
+                if (us.getCargo().equals("LOGISTICA")) {
                     request.getRequestDispatcher("Controlador?menu=Principal").forward(request, response);
-                }
-                else if(us.getCargo().equals("ENCARGADO")){
+                } else if (us.getCargo().equals("ENCARGADO")) {
                     request.getRequestDispatcher("Controlador?menu=PrincipalEncargado").forward(request, response);
                 }
-            }else{
+            } else {
                 request.getRequestDispatcher("index.jsp").forward(request, response);
             }
-        }
-        else{
+        } else if (accion.equalsIgnoreCase("Reclamo")) {
+            request.getRequestDispatcher("Reclamos.jsp").forward(request, response);
+        } else {
             request.getRequestDispatcher("index.jsp").forward(request, response);
         }
     }

@@ -48,13 +48,13 @@
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="2" name="mntB" id="mntB">
+                                <input class="form-check-input" type="checkbox" value="1" name="mntB" id="mntB">
                                 <label class="form-check-label" for="mntB">
                                     Mantenimiento-2
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="3" name="mntC" id="mntC">
+                                <input class="form-check-input" type="checkbox" value="1" name="mntC" id="mntC">
                                 <label class="form-check-label" for="mntC">
                                     Mantenimiento-3
                                 </label>
@@ -64,6 +64,9 @@
                         <button type="submit" name="accion" value="RegistrarAprobacion" class="btn btn-info">Registrar</button>
                         <div class="form-group">
                             <input type="text" value="${ApruebaOrden.getMensajeSalida()}" name="txtMensaje1" class="form-control" style="color: #F23006; outline:none" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label style="color: #889AA5; font-size: xxx-large;">TOTAL: </label> <input type="text" value="${ValorTotal.getValorTotal()}" name="txtMontoTotal" class="form-control" style="color: #F23006; font-size: xxx-large;" disabled>
                         </div>
                     </form>
                 </div>
@@ -94,7 +97,7 @@
                                 <td>${ord.getObservaciones()}</td>
                                 <td class="d-flex">
                                     <a class="btn btn-warning" href="Controlador?menu=Aprobacion&accion=Editar&idOrden=${ord.getIdOrdenTrabajo()}">Aprobar</a>
-                                    <a class="btn btn-danger" style="margin-left: 10px" href="Controlador?menu=Aprobacion&accion=Delete&idOrden=${ord.getIdOrdenTrabajo()}">Eliminar</a>
+                                    <a class="btn btn-danger" style="margin-left: 10px" href="Controlador?menu=Aprobacion&accion=Rechazar&idOrden=${ord.getIdOrdenTrabajo()}">Rechazar</a>
                                 </td>
                             </tr>
                         </c:forEach>

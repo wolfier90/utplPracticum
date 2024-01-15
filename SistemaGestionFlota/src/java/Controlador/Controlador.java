@@ -59,7 +59,15 @@ public class Controlador extends HttpServlet {
             controladorAcciones.procesaAccionAprobacion(request, response, accion);
             request.getRequestDispatcher("AprobacionSolicitud.jsp").forward(request, response);
         }
+        if (menu.equals("Finalizar")) {
+            controladorAcciones.procesaAccionFinalizar(request, response, accion);
+            request.getRequestDispatcher("FinalizarMantenimientos.jsp").forward(request, response);
+        }
         if (menu.equals("Reportes")) {
+            request.getRequestDispatcher("Reportes.jsp").forward(request, response);
+        }
+        if (menu.equals("Reclamo")) {
+            controladorAcciones.procesaAccionReclamo(request, response, accion);
             request.getRequestDispatcher("Reportes.jsp").forward(request, response);
         }
     }
