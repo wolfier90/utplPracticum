@@ -29,9 +29,15 @@
                                 <a style="margin-left: 10px; border: none" class="dropdown-item" href="Controlador?menu=Finalizar&accion=Listar" target="myFrame">Finalizar Mantenimiento</a>
                             </div>
                         </div>
-                        <li class="nav-item">
-                            <a style="margin-left: 10px; border: none" class="btn btn-outline-light" href="Controlador?menu=Reportes" target="myFrame">Reportes</a>
-                        </li>
+                        <div class="dropdown">
+                            <button style="border: none; width: 200px" class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
+                                Reportes
+                            </button>
+                            <div class="dropdown-menu text-center">
+                                <a style="margin-left: 10px; border: none" class="dropdown-item" href="Controlador?menu=reporteReclamo" target="myFrame">Sugerencias y Reclamos</a>
+                                <a style="margin-left: 10px; border: none" class="dropdown-item" href="Controlador?menu=Finalizar&accion=Listar" target="myFrame">Empleados</a>
+                            </div>
+                        </div>
                     </ul>
                 </div>
                 <div class="dropdown">

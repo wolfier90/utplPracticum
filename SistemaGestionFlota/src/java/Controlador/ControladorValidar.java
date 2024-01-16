@@ -5,10 +5,13 @@
  */
 package Controlador;
 
+import Modelo.Reclamo;
+import Modelo.ReclamoDAO;
 import Modelo.Usuario;
 import Modelo.UsuarioDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -96,6 +99,14 @@ public class ControladorValidar extends HttpServlet {
                 request.getRequestDispatcher("index.jsp").forward(request, response);
             }
         } else if (accion.equalsIgnoreCase("Reclamo")) {
+            ReclamoDAO reclamoDAO = new ReclamoDAO();
+            Reclamo reclamo = new Reclamo();
+            reclamo.setMensajeSalida("");
+            List<Reclamo> listaCircuitos = reclamoDAO.obtenerCircuitos();
+            List<Reclamo> listaSubcircuitos = reclamoDAO.obtenerSubcircuitos();
+            request.setAttribute("circuitos", listaCircuitos);
+            request.setAttribute("subcircuitos", listaSubcircuitos);
+            request.setAttribute("Reclamo", reclamo);
             request.getRequestDispatcher("Reclamos.jsp").forward(request, response);
         } else {
             request.getRequestDispatcher("index.jsp").forward(request, response);

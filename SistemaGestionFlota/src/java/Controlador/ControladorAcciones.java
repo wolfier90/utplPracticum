@@ -487,37 +487,83 @@ public class ControladorAcciones extends HttpServlet {
             throws ServletException, IOException {
         ReclamoDAO reclamoDAO = new ReclamoDAO();
         List lista = new ArrayList();
-            switch (accion) {
-                case "Salir":
-                    request.getRequestDispatcher("index.jsp").forward(request, response);
-                    break;
-                case "Reclamo":
-                    request.getRequestDispatcher("Reclamos.jsp").forward(request, response);
-                    break;
-                case "Registrar":
-                    Reclamo reclamo = new Reclamo();
-                    int circuito = Integer.parseInt(request.getParameter("txtCircuito"));
-                    int subCircuito = Integer.parseInt(request.getParameter("txtSubcircuito"));
-                    String tipo = request.getParameter("cboTipo");
-                    String detalle = request.getParameter("txtDetalle");
-                    String contacto = request.getParameter("txtContacto");
-                    String Apellidos = request.getParameter("txtApellidos");
-                    String Nombres = request.getParameter("txtNombres");
-                    reclamo.setIdCircuito(circuito);
-                    reclamo.setIdSubCircuito(subCircuito);
-                    reclamo.setTipoReclamo(tipo);
-                    reclamo.setDetalle(detalle);
-                    reclamo.setContacto(contacto);
-                    reclamo.setApellidos(Apellidos);
-                    reclamo.setNombres(Nombres);
-                    reclamoDAO.agregar(reclamo);
-                    reclamo.setMensajeSalida("Registro exitoso");
-                    request.setAttribute("Reclamo", reclamo);
-                    request.getRequestDispatcher("Controlador?menu=Reclamo&accion=Reclamo").forward(request, response);
-                    break;
-                default:
-                    throw new AssertionError();
-            }
+        switch (accion) {
+            case "Salir":
+                request.getRequestDispatcher("index.jsp").forward(request, response);
+                break;
+            case "Reclamo":
+                ReclamoDAO reclamoRlDAO = new ReclamoDAO();
+                Reclamo reclamos = new Reclamo();
+                reclamos.setMensajeSalida("");
+                List<Reclamo> listaCircuitos = reclamoRlDAO.obtenerCircuitos();
+                List<Reclamo> listaSubcircuitos = reclamoRlDAO.obtenerSubcircuitos();
+                request.setAttribute("circuitos", listaCircuitos);
+                request.setAttribute("subcircuitos", listaSubcircuitos);
+                request.setAttribute("Reclamo", reclamos);
+                request.getRequestDispatcher("Reclamos.jsp").forward(request, response);
+                request.getRequestDispatcher("Reclamos.jsp").forward(request, response);
+                break;
+            case "Registrar":
+                Reclamo reclamo = new Reclamo();
+                int circuito = Integer.parseInt(request.getParameter("cboCircuito"));
+                int subCircuito = Integer.parseInt(request.getParameter("cboSubcircuito"));
+                String tipo = request.getParameter("cboTipo");
+                String detalle = request.getParameter("txtDetalle");
+                String contacto = request.getParameter("txtContacto");
+                String Apellidos = request.getParameter("txtApellidos");
+                String Nombres = request.getParameter("txtNombres");
+                reclamo.setIdCircuito(circuito);
+                reclamo.setIdSubcircuito(subCircuito);
+                reclamo.setTipoReclamo(tipo);
+                reclamo.setDetalle(detalle);
+                reclamo.setContacto(contacto);
+                reclamo.setApellidos(Apellidos);
+                reclamo.setNombres(Nombres);
+                reclamoDAO.agregar(reclamo);
+                reclamo.setMensajeSalida("Registro exitoso");
+                request.setAttribute("Reclamo", reclamo);
+                request.getRequestDispatcher("Controlador?menu=Reclamo&accion=Reclamo").forward(request, response);
+                break;
+            default:
+                throw new AssertionError();
+        }
         request.getRequestDispatcher("Reclamos.jsp").forward(request, response);
     }
+
+    public void procesaAccionRptReclamo(HttpServletRequest request, HttpServletResponse response, String accion)
+            throws ServletException, IOException {
+        ReclamoDAO reclamoDAO = new ReclamoDAO();
+        List lista = new ArrayList();
+        if (accion == null) {
+            request.getRequestDispatcher("Controlador?menu=reporteReclamo&accion=buscarReclamos").forward(request, response);
+        } else {
+            switch (accion) {
+                case "buscarReclamos":
+                    Utilitarios util = new Utilitarios();
+                    String fechaInicio = request.getParameter("txtFechaInicio");
+                    String fechaFin = request.getParameter("txtFechaFin");
+                    if (fechaInicio == null) {
+                        request.setAttribute("listaReclamos", lista);
+                    } else {
+                        try {
+                            java.util.Date dateIni = util.convertStringToDate(fechaInicio);
+                            java.sql.Date sql_date_inicio = util.convertSqlDate(dateIni);
+                            java.util.Date dateFin = util.convertStringToDate(fechaFin);
+                            java.sql.Date sql_date_fin = util.convertSqlDate(dateFin);
+
+                            lista = reclamoDAO.listarReclamos(sql_date_inicio, sql_date_fin);
+                            request.setAttribute("listaReclamos", lista);
+                        } catch (ParseException ex) {
+                            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    break;
+                default:
+                    request.setAttribute("listaReclamos", lista);
+                    throw new AssertionError();
+            }
+        }
+        request.getRequestDispatcher("ReportesSugerencias.jsp").forward(request, response);
+    }
+
 }

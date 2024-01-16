@@ -15,7 +15,7 @@ public class Reclamo {
 
     int idReclamo;
     int idCircuito;
-    int idSubCircuito;
+    int idSubcircuito;
     String tipoReclamo;
     String detalle;
     String contacto;
@@ -23,17 +23,23 @@ public class Reclamo {
     String nombres;
     String estado;
     Date fechaGeneracion;
+    String nombreCircuito;
+    String nombreSubcircuito;
     String mensajeSalida;
+    Date fechaInicio;
+    Date fechaFin;
     int codigoError;
+    int cantidad;
 
     public Reclamo() {
     }
 
-    public Reclamo(int idReclamo, int idCircuito, int idSubCircuito, String tipoReclamo, String detalle, String contacto,
-            String apellidos, String nombres, String estado, Date fechaGeneracion, String mensajeSalida, int codigoError) {
+    public Reclamo(int idReclamo, int idCircuito, int idSubcircuito, String tipoReclamo, String detalle, String contacto,
+            String apellidos, String nombres, String estado, Date fechaGeneracion, String nombreCircuito,
+            String nombreSubcircuito, String mensajeSalida, int codigoError, Date fechaInicio, Date fechaFin, int cantidad) {
         this.idReclamo = idReclamo;
         this.idCircuito = idCircuito;
-        this.idSubCircuito = idSubCircuito;
+        this.idSubcircuito = idSubcircuito;
         this.tipoReclamo = tipoReclamo;
         this.detalle = detalle;
         this.contacto = contacto;
@@ -41,8 +47,13 @@ public class Reclamo {
         this.nombres = nombres;
         this.estado = estado;
         this.fechaGeneracion = fechaGeneracion;
+        this.nombreCircuito = nombreCircuito;
+        this.nombreSubcircuito = nombreSubcircuito;
         this.mensajeSalida = mensajeSalida;
         this.codigoError = codigoError;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.cantidad = cantidad;
     }
 
     public int getIdReclamo() {
@@ -61,12 +72,12 @@ public class Reclamo {
         this.idCircuito = idCircuito;
     }
 
-    public int getIdSubCircuito() {
-        return idSubCircuito;
+    public int getIdSubcircuito() {
+        return idSubcircuito;
     }
 
-    public void setIdSubCircuito(int idSubCircuito) {
-        this.idSubCircuito = idSubCircuito;
+    public void setIdSubcircuito(int idSubcircuito) {
+        this.idSubcircuito = idSubcircuito;
     }
 
     public String getTipoReclamo() {
@@ -124,6 +135,22 @@ public class Reclamo {
     public void setFechaGeneracion(Date fechaGeneracion) {
         this.fechaGeneracion = fechaGeneracion;
     }
+
+    public String getNombreCircuito() {
+        return nombreCircuito;
+    }
+
+    public void setNombreCircuito(String nombreCircuito) {
+        this.nombreCircuito = nombreCircuito;
+    }
+
+    public String getNombreSubcircuito() {
+        return nombreSubcircuito;
+    }
+
+    public void setNombreSubcircuito(String nombreSubcircuito) {
+        this.nombreSubcircuito = nombreSubcircuito;
+    }
     
     public String getMensajeSalida() {
         return mensajeSalida;
@@ -139,6 +166,30 @@ public class Reclamo {
 
     public void setCodigoError(int codigoError) {
         this.codigoError = codigoError;
+    }
+
+    public Date getFechaInicio() {
+        return fechaInicio;
+    }
+
+    public void setFechaInicio(Date fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public Date getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(Date fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
     }
     
 }

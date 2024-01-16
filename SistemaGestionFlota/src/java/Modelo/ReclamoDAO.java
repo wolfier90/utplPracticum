@@ -23,6 +23,7 @@ import java.util.logging.Logger;
  * @author USUARIO
  */
 public class ReclamoDAO {
+
     Conexion cn = new Conexion();
     Connection con;
     PreparedStatement ps;
@@ -30,9 +31,7 @@ public class ReclamoDAO {
     ResultSet rs;
     int respuesta;
     int codigoError;
-    
-    
-    
+
     //Operaciones CRUD
     public int agregar(Reclamo reclamo) {
 
@@ -44,7 +43,7 @@ public class ReclamoDAO {
             //Se prepara el SP en el servidor de base de datos
             cs = con.prepareCall(sql);
             cs.setInt(1, reclamo.getIdCircuito());
-            cs.setInt(2, reclamo.getIdSubCircuito());
+            cs.setInt(2, reclamo.getIdSubcircuito());
             cs.setString(3, reclamo.tipoReclamo);
             cs.setString(4, reclamo.getDetalle());
             cs.setString(5, reclamo.getContacto());
@@ -59,5 +58,95 @@ public class ReclamoDAO {
         }
 
         return codigoError;
+    }
+
+    public List obtenerCircuitos() {
+        //Se define la sentencia del SP
+        String sql = "{CALL pa_consulta_circuitos(?)}";
+        List<Reclamo> Lista = new ArrayList<>();
+        try {
+            con = cn.Conexion();
+            //Se prepara el SP en el servidor de base de datos
+            cs = con.prepareCall(sql);
+            cs.setString(1, "C"); // para traer los circuitos
+            //Obtener los resultados obtenidos de la ejecución
+            rs = cn.ejecutarStoredProcedure(cs);
+
+            if (rs != null) {
+                while (rs.next()) {
+                    Reclamo circuito = new Reclamo();
+                    circuito.setIdCircuito(rs.getInt("id_circuito"));
+                    circuito.setNombreCircuito(rs.getString("nombre_circuito"));
+                    Lista.add(circuito);
+                }
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            cn.desconectar();
+        }
+        return Lista;
+    }
+    
+    public List obtenerSubcircuitos() {
+        //Se define la sentencia del SP
+        String sql = "{CALL pa_consulta_circuitos(?)}";
+        List<Reclamo> Lista = new ArrayList<>();
+        try {
+            con = cn.Conexion();
+            //Se prepara el SP en el servidor de base de datos
+            cs = con.prepareCall(sql);
+            cs.setString(1, "S"); // para traer los subcircuitos
+            //Obtener los resultados obtenidos de la ejecución
+            rs = cn.ejecutarStoredProcedure(cs);
+
+            if (rs != null) {
+                while (rs.next()) {
+                    Reclamo subcircuito = new Reclamo();
+                    subcircuito.setIdSubcircuito(rs.getInt("id_subcircuito"));
+                    subcircuito.setNombreSubcircuito(rs.getString("nombre_subcircuito"));
+                    Lista.add(subcircuito);
+                }
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            cn.desconectar();
+        }
+        return Lista;
+    }
+    
+    public List listarReclamos(Date fechaInicio, Date fechaFin) {
+        //Se define la sentencia del SP
+        String sql = "{CALL pa_obtener_reportes(?,?,?)}";
+        List<Reclamo> Lista = new ArrayList<>();
+        try {
+            con = cn.Conexion();
+            //Se prepara el SP en el servidor de base de datos
+            cs = con.prepareCall(sql);
+            cs.setString(1, "R");
+            cs.setDate(2, (Date) fechaInicio);
+            cs.setDate(3, (Date) fechaFin);
+            //Obtener los resultados obtenidos de la ejecución
+            rs = cn.ejecutarStoredProcedure(cs);
+
+            if (rs != null) {
+                while (rs.next()) {
+                    Reclamo rcm = new Reclamo();
+                    rcm.setTipoReclamo(rs.getString("tipo_reclamo"));
+                    rcm.setNombreCircuito(rs.getString("nombre_circuito"));
+                    rcm.setNombreSubcircuito(rs.getString("nombre_subcircuito"));
+                    rcm.setFechaInicio(fechaInicio);
+                    rcm.setFechaFin(fechaFin);
+                    rcm.setCantidad(rs.getInt("cantidad"));
+                    Lista.add(rcm);
+                }
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            cn.desconectar();
+        }
+        return Lista;
     }
 }

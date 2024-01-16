@@ -6,6 +6,8 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/include.jsp" %>
+<%@page import="java.util.List"%>
+<%@page import="Modelo.Reclamo"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -19,13 +21,30 @@
             <div class="card col-sm-4">
                 <div class="card-body">
                     <form action="Controlador?menu=Reclamo" method="POST">
-                        <div class="form-group">  
-                            <label>*Circuito</label>
-                            <input type="text" name="txtCircuito" class="form-control">
+                        <div class="form-group form-group-lg">  
+                            <label for="lg" for="cboCircuito">*Circuito</label>
+                            <div class="col-sm-4">
+                                <select id="cboCircuito" name="cboCircuito" style="width:150px">
+                                    <% List<Reclamo> listaCircuito = (List<Reclamo>)request.getAttribute("circuitos");
+                                    if(listaCircuito!=null)
+                                    for(Reclamo reclamo:listaCircuito){%>
+                                    <option value="<%=reclamo.getIdCircuito()%>"><%=reclamo.getNombreCircuito()%></option>
+                                    <%} %>
+                                </select>
+                            </div>
+                            <!-- <input type="text" name="txtCircuito" class="form-control"> -->
                         </div>
-                        <div class="form-group">  
-                            <label>*Subcircuito</label>
-                            <input type="text" name="txtSubcircuito" class="form-control">
+                        <div class="form-group form-group-lg">  
+                            <label for="lg" for="cboSubcircuito">*Subcircuito</label>
+                            <div class="col-sm-4">
+                                <select id="cboSubcircuito" name="cboSubcircuito" style="width:150px">
+                                    <% List<Reclamo> listaSubcircuito = (List<Reclamo>)request.getAttribute("subcircuitos");
+                                    if(listaSubcircuito!=null)
+                                    for(Reclamo reclamo:listaSubcircuito){%>
+                                    <option value="<%=reclamo.getIdSubcircuito()%>"><%=reclamo.getNombreSubcircuito()%></option>
+                                    <%} %>
+                                </select>
+                            </div>
                         </div>
                         <div class="form-group">  
                             <label>*Tipo</label>
