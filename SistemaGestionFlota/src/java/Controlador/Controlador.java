@@ -43,6 +43,10 @@ public class Controlador extends HttpServlet {
         if (menu.equals("PrincipalEncargado")) {
             request.getRequestDispatcher("PrincipalEncargadoPolicial.jsp").forward(request, response);
         }
+        if (menu.equals("Usuarios")) {
+            //Procesa las acciones CRUD del menu Usuarios
+            controladorAcciones.procesaAccionUsuarios(request, response, accion);
+        }
         if (menu.equals("Personal")) {
             //Procesa las acciones CRUD del menu Personal
             controladorAcciones.procesaAccionPersonal(request, response, accion);

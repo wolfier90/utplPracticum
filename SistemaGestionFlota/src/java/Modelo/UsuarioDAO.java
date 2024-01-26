@@ -6,9 +6,15 @@
 package Modelo;
 
 import Config.Conexion;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -18,6 +24,7 @@ public class UsuarioDAO {
     Conexion cn=new Conexion();
     Connection con;
     PreparedStatement ps;
+    CallableStatement cs;
     ResultSet rs;
     
     public Usuario validar(String usuario, String clave){
@@ -46,5 +53,37 @@ public class UsuarioDAO {
             System.out.println("No se establecio conexion a la BD, error: " + e);
         }
         return user;
+    }
+    
+    public List listar() {
+        //Se define la sentencia del SP
+        String sql = "{CALL pa_obtener_usuario(?)}";
+        List<Usuario> Lista = new ArrayList<>();
+        try {
+            con = cn.Conexion();
+            //Se prepara el SP en el servidor de base de datos
+            cs = con.prepareCall(sql);
+            cs.setInt(1, 0); //Le mandamos 0 para que traiga todos los registros sin filtrar
+            //Obtener los resultados obtenidos de la ejecución
+            rs = cn.ejecutarStoredProcedure(cs);
+
+            if (rs != null) {
+                while (rs.next()) {
+                    Usuario us = new Usuario();
+                    us.setId(rs.getInt("id_usuario"));
+                    us.setIdPersonal(rs.getInt("id_personal_policial"));
+                    us.setClave(rs.getString("clave"));
+                    us.setUser(rs.getString("nombre_usuario"));
+                    us.setEstado(rs.getString("estado"));
+                    Lista.add(us);
+                }
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(Conexion.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            cn.desconectar();
+        }
+
+        return Lista;
     }
 }

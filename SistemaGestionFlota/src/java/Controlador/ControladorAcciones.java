@@ -16,6 +16,7 @@ import Modelo.PersonalPolicialDAO;
 import Modelo.Reclamo;
 import Modelo.ReclamoDAO;
 import Modelo.Usuario;
+import Modelo.UsuarioDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -99,6 +100,22 @@ public class ControladorAcciones extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    public void procesaAccionUsuarios(HttpServletRequest request, HttpServletResponse response, String accion)
+            throws ServletException, IOException {
+        List lista = new ArrayList();
+        UsuarioDAO usuarioDao = new UsuarioDAO();
+        int resultado;
+        switch (accion) {
+            case "Listar":
+                lista = usuarioDao.listar();
+                request.setAttribute("usuario", lista);
+                break;
+            default:
+                throw new AssertionError();
+        }
+        request.getRequestDispatcher("Usuario.jsp").forward(request, response);
+    }
+    
     public void procesaAccionPersonal(HttpServletRequest request, HttpServletResponse response, String accion)
             throws ServletException, IOException {
         List lista = new ArrayList();
