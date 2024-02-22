@@ -20,6 +20,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -30,18 +31,22 @@ public class Controlador extends HttpServlet {
     Usuario us = new Usuario();
     PersonalPolicialDAO personalDao = new PersonalPolicialDAO();
     ControladorAcciones controladorAcciones = new ControladorAcciones();
+    boolean editar = false;
     int ide;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ParseException {
         String menu = request.getParameter("menu");
         String accion = request.getParameter("accion");
-
+        HttpSession sesion = request.getSession();
         if (menu.equals("Principal")) {
             request.getRequestDispatcher("Principal.jsp").forward(request, response);
         }
         if (menu.equals("PrincipalEncargado")) {
             request.getRequestDispatcher("PrincipalEncargadoPolicial.jsp").forward(request, response);
+        }
+        if (menu.equals("PrincipalGerencia")) {
+            request.getRequestDispatcher("PrincipalGerencia.jsp").forward(request, response);
         }
         if (menu.equals("Usuarios")) {
             //Procesa las acciones CRUD del menu Usuarios

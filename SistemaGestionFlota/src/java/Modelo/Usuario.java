@@ -25,6 +25,8 @@ public class Usuario extends FlotaVehicular{
     String ciudadNacimiento;
     String celular;
     String rango;
+    String codigoRol;
+    String nombreRol;
     String mensajeSalida;
     int codigoError;
 
@@ -33,7 +35,7 @@ public class Usuario extends FlotaVehicular{
     
     public Usuario(int id, String clave, String nombres, String apellidos, String correo, String estado, String user, 
             String identificacion, String cargo, Date fechaNacimiento, String tipoSangre, String ciudadNacimiento,
-            String celular, String rango, String mensajeSalida, int codigoError){
+            String celular, String rango, String codigoRol, String nombreRol, String mensajeSalida, int codigoError){
         this.id = id;
         this.clave = clave;
         this.nombres = nombres;
@@ -48,6 +50,8 @@ public class Usuario extends FlotaVehicular{
         this.ciudadNacimiento = ciudadNacimiento;
         this.celular = celular;
         this.rango = rango;
+        this.codigoRol = codigoRol;
+        this.nombreRol = nombreRol;
         this.mensajeSalida = mensajeSalida;
         this.codigoError = codigoError;
     }
@@ -164,6 +168,22 @@ public class Usuario extends FlotaVehicular{
         this.rango = rango;
     }
 
+    public String getCodigoRol() {
+        return codigoRol;
+    }
+
+    public void setCodigoRol(String codigoRol) {
+        this.codigoRol = codigoRol;
+    }
+
+    public String getNombreRol() {
+        return nombreRol;
+    }
+
+    public void setNombreRol(String nombreRol) {
+        this.nombreRol = nombreRol;
+    }
+    
     public String getMensajeSalida() {
         return mensajeSalida;
     }

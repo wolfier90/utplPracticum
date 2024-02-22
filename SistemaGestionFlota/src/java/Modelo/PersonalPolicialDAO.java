@@ -185,5 +185,4 @@ public class PersonalPolicialDAO {
             cn.desconectar();
         }
     }
-
 }

@@ -12,6 +12,7 @@ import Modelo.Mantenimiento;
 import Modelo.MantenimientoDAO;
 import Modelo.Ordenes;
 import Modelo.OrdenesDAO;
+import Modelo.PersonalPolicial;
 import Modelo.PersonalPolicialDAO;
 import Modelo.Reclamo;
 import Modelo.ReclamoDAO;
@@ -101,14 +102,81 @@ public class ControladorAcciones extends HttpServlet {
     }// </editor-fold>
 
     public void procesaAccionUsuarios(HttpServletRequest request, HttpServletResponse response, String accion)
-            throws ServletException, IOException {
+            throws ServletException, IOException, ParseException {
         List lista = new ArrayList();
         UsuarioDAO usuarioDao = new UsuarioDAO();
+        PersonalPolicial personalPolicial = new PersonalPolicial();
+        String idPersonalPolicial = "";
+        HttpSession sesion = request.getSession(false);
+        String editaUsuario = (String) sesion.getAttribute("sessionEditaUsuario");
         int resultado;
         switch (accion) {
             case "Listar":
+                //Listamos todos los usuarios
                 lista = usuarioDao.listar();
                 request.setAttribute("usuario", lista);
+                
+                //INICIO Llenamos el combo de roles
+                UsuarioDAO usuarioDAO = new UsuarioDAO();
+                List<Usuario> listaRoles = usuarioDAO.obtenerRoles();
+                request.setAttribute("comboRoles", listaRoles);
+                if (editaUsuario != "S"){
+                    Usuario u = new Usuario();
+                    request.setAttribute("usuarioEditar", u);
+                }
+                //FIN
+                
+                //INICIO Llenamos el combo de Personal policial que no tengan usuario registrado
+                List<Usuario> listaPersonal = usuarioDAO.obtenerPersonalSinUser();
+                request.setAttribute("comboPersonal", listaPersonal);
+                //FIN
+                break;
+            case "BuscaPersonal":
+                PersonalPolicialDAO personalPolicialDAO = new PersonalPolicialDAO();
+                idPersonalPolicial = request.getParameter("txtIdpersonalpolicial");
+                us = personalPolicialDAO.listarId(Integer.parseInt(idPersonalPolicial));
+                us.setId(Integer.parseInt(idPersonalPolicial));
+                request.setAttribute("personalPolicial", us);
+                request.getRequestDispatcher("Controlador?menu=Usuarios&accion=Listar").forward(request, response);
+                break;
+            case "Agregar":
+                idPersonalPolicial = request.getParameter("cboPersonal");
+                String idRol = request.getParameter("cboRol");
+                //int circuito = Integer.parseInt(request.getParameter("cboCircuito"));
+                String nombreUsuario = request.getParameter("txtNombreUsuario");
+                String contrasenia = request.getParameter("txtContrasenia");
+                personalPolicial.setIdPersonal(Integer.parseInt(idPersonalPolicial));
+                personalPolicial.setCodigoRol(idRol);
+                personalPolicial.setUser(nombreUsuario);
+                personalPolicial.setClave(contrasenia);
+                personalPolicial.setMensajeSalida("");
+                resultado = usuarioDao.agregar(personalPolicial);
+                if (resultado == 0) {
+                    personalPolicial.setMensajeSalida("Usuario creado exitosamente");
+                }
+                if (resultado == 1) {
+                    personalPolicial.setMensajeSalida("El personal policial es inválido");
+                }
+                if (resultado == 2) {
+                    personalPolicial.setMensajeSalida("El personal policial ya tiene usuario asignado");
+                }
+                if (resultado == 3) {
+                    personalPolicial.setMensajeSalida("El nombre de usuario ingresado ya existe");
+                }
+                request.setAttribute("respuesta", personalPolicial);
+                request.getRequestDispatcher("Controlador?menu=Usuarios&accion=Listar").forward(request, response);
+                break;
+            case "Delete":
+                ide = Integer.parseInt(request.getParameter("id"));
+                usuarioDao.delete(ide);
+                request.getRequestDispatcher("Controlador?menu=Usuarios&accion=Listar").forward(request, response);
+                break;
+            case "Editar":
+                ide = Integer.parseInt(request.getParameter("id"));
+                Usuario user = usuarioDao.listarId(ide);
+                request.setAttribute("usuarioEditar", user);
+                sesion.setAttribute("sessionEditaUsuario", "S");
+                request.getRequestDispatcher("Controlador?menu=Usuarios&accion=Listar").forward(request, response);
                 break;
             default:
                 throw new AssertionError();

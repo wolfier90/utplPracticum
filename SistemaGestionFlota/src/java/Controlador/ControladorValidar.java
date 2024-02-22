@@ -90,10 +90,12 @@ public class ControladorValidar extends HttpServlet {
             sesion.setAttribute("idPersonalPolicial", idPersonal);
             if (us.getUser() != null) {
                 request.setAttribute("usuario", us);
-                if (us.getCargo().equals("LOGISTICA")) {
+                if (us.getCodigoRol().equals("001")) { //001 es el rol "Tecnico1" para el personal de logistica
                     request.getRequestDispatcher("Controlador?menu=Principal").forward(request, response);
-                } else if (us.getCargo().equals("ENCARGADO")) {
+                } else if (us.getCodigoRol().equals("003")) { //003 es el rol "Encargado" para el encargado de flota
                     request.getRequestDispatcher("Controlador?menu=PrincipalEncargado").forward(request, response);
+                }else if (us.getCodigoRol().equals("002")) { //003 es el rol "Encargado" para el encargado de flota
+                    request.getRequestDispatcher("Controlador?menu=PrincipalGerencia").forward(request, response);
                 }
             } else {
                 request.getRequestDispatcher("index.jsp").forward(request, response);

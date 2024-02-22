@@ -6,6 +6,8 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/include.jsp" %>
+<%@page import="java.util.List"%>
+<%@page import="Modelo.Usuario"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -19,19 +21,42 @@
             <div class="card col-sm-4">
                 <div class="card-body">
                     <form action="Controlador?menu=Usuarios" method="POST">
+                        <div class="form-group form-group-lg">  
+                            <label for="lg" for="cboPersonal">*Personal Policial</label>
+                            <div class="col-sm-4">
+                                <select id="cboPersonal" name="cboPersonal" style="width:150px">
+                                    <% List<Usuario> listaPersonal = (List<Usuario>)request.getAttribute("comboPersonal");
+                                    if(listaPersonal!=null)
+                                    for(Usuario usuario:listaPersonal){%>
+                                    <option value="<%=usuario.getIdPersonal()%>"><%=usuario.getNombres()%> <%=usuario.getApellidos()%> - <%=usuario.getIdentificacion()%></option>
+                                    <%} %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-lg">  
+                            <label for="lg" for="cboRol">*Rol</label>
+                            <div class="col-sm-4">
+                                <select id="cboRol" name="cboRol" style="width:150px">
+                                    <% List<Usuario> listaRoles = (List<Usuario>)request.getAttribute("comboRoles");
+                                    if(listaRoles!=null)
+                                    for(Usuario usuario:listaRoles){%>
+                                        <option value="<%=usuario.getCodigoRol()%>"><%=usuario.getNombreRol()%></option>
+                                    <%} %>
+                                </select>
+                            </div>
+                        </div>
                         <div class="form-group">  
                             <label>*Nombre de Usuario</label>
-                            <input type="text" name="txtNombre" class="form-control">
+                            <input type="text" value="${usuarioEditar.getUser()}" name="txtNombreUsuario" class="form-control">
                         </div>
                         <div class="form-group">  
                             <label>*Contraseña</label>
-                            <input type="text" name="txtApellido" class="form-control">
+                            <input type="text" value="${usuarioEditar.getClave()}" name="txtContrasenia" class="form-control">
                         </div>
                         <br></br>
                         <input type="submit" name="accion" value="Agregar" class="btn btn-info">
-                        <input type="submit" name="accion" value="Actualizar" class="btn btn-success">
                         <div class="form-group">
-                            <input type="text" name="txtMensaje" class="form-control" style="color: #F23006" disabled>
+                            <input type="text" value="${respuesta.getMensajeSalida()}" name="txtMensaje" class="form-control" style="color: #F23006" disabled>
                         </div>
                     </form>
                 </div>
@@ -42,35 +67,22 @@
                         <tr>
                             <th>NOMBRES</th>
                             <th>APELLIDOS</th>
-                            <th>VEHICULO</th>
                             <th>IDENTIFICACION</th>
-                            <th>CORREO</th>
-                            <th>NACIMIENTO</th>
-                            <th>CARGO</th>
-                            <th>CIUDAD</th>
-                            <th>TIPO SANGRE</th>
-                            <th>CELULAR</th>
-                            <th>RANGO</th>
+                            <th>USUARIO</th>
+                            <th>ROL</th>
                             <th>ACCIONES</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <c:forEach var="pe" items="${personal}">
+                        <c:forEach var="pe" items="${usuario}">
                             <tr>
                                 <td>${pe.getNombres()}</td>
                                 <td>${pe.getApellidos()}</td>
-                                <td>${pe.getPlaca()}</td>
                                 <td>${pe.getIdentificacion()}</td>
-                                <td>${pe.getCorreo()}</td>
-                                <td>${pe.getFechaNacimiento()}</td>
-                                <td>${pe.getCargo()}</td>
-                                <td>${pe.getCiudadNacimiento()}</td>
-                                <td>${pe.getTipoSangre()}</td>
-                                <td>${pe.getCelular()}</td>
-                                <td>${pe.getRango()}</td>
+                                <td>${pe.getUser()}</td>
+                                <td>${pe.getNombreRol()}</td>
                                 <td class="d-flex">
-                                    <a class="btn btn-warning" href="Controlador?menu=Personal&accion=Editar&id=${pe.getId()}">Editar</a>
-                                    <a class="btn btn-danger" style="margin-left: 10px" href="Controlador?menu=Personal&accion=Delete&id=${pe.getId()}">Eliminar</a>
+                                    <a class="btn btn-danger" style="margin-left: 10px" href="Controlador?menu=Usuarios&accion=Delete&id=${pe.getId()}">Eliminar</a>
                                 </td>
                             </tr>
                         </c:forEach>

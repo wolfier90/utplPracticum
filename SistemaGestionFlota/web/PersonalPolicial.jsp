@@ -84,18 +84,18 @@
                                     <option value="SUBTENIENTE">SUBTENIENTE</option>
                                     <option value="SARGENTO PRIMERO">SARGENTO PRIMERO</option>
                                     <option value="SARGENTO SEGUNDO">SARGENTO SEGUNDO</option>
-                                    <option value="CABO SEGUNDO">CABO SEGUNDO</option>
+                                    <option value="CABO PRIMERO">CABO SEGUNDO</option>
                                     <option value="CABO SEGUNDO">CABO SEGUNDO</option>
                                 </select>
                             </div>
                         </div><br>
                         <div class="form-group">  
                             <label>*Cargo</label>
-                            <!--<input type="text" value="${empleado.getCargo()}" name="txtCargo" class="form-control">-->
                             <div class="col-sm-4">
                                 <select id="cboCargo" value="${empleado.getCargo()}" name="cboCargo" style="width:150px">
                                     <option value="LOGISTICA">LOGISTICA</option>
                                     <option value="ENCARGADO">ENCARGADO</option>
+                                    <option value="GERENCIA">GERENCIA</option>
                                 </select>
                             </div>
                         </div>
