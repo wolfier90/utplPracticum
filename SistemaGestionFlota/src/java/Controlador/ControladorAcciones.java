@@ -14,6 +14,8 @@ import Modelo.Ordenes;
 import Modelo.OrdenesDAO;
 import Modelo.PersonalPolicial;
 import Modelo.PersonalPolicialDAO;
+import Modelo.Pertrecho;
+import Modelo.PertrechoDAO;
 import Modelo.Reclamo;
 import Modelo.ReclamoDAO;
 import Modelo.Usuario;
@@ -504,7 +506,7 @@ public class ControladorAcciones extends HttpServlet {
                     chkMnt3 = "";
                 }
 
-                if (trim(chkMnt1).equals("1") && trim(chkMnt2).equals("2")) {
+                if (trim(chkMnt1).equals("1") && trim(chkMnt2).equals("1")) {
                     mnt.setMensajeSalida("No puede escoger el mantenimiento 1 y 2 a la vez");
                 } else {
                     int idOrdenTrabajo = ordenPendiente;
@@ -651,4 +653,71 @@ public class ControladorAcciones extends HttpServlet {
         request.getRequestDispatcher("ReportesSugerencias.jsp").forward(request, response);
     }
 
+    public void procesaAccionPertrecho(HttpServletRequest request, HttpServletResponse response, String accion)
+            throws ServletException, IOException, ParseException {
+        List lista = new ArrayList();
+        PertrechoDAO pertrechoDAO = new PertrechoDAO();
+        Pertrecho pertrecho = new Pertrecho();
+        PersonalPolicial personalPolicial = new PersonalPolicial();
+        String idPersonalPolicial = "";
+        int resultado;
+        switch (accion) {
+            case "Listar":
+                //Listamos todos los usuarios
+                lista = pertrechoDAO.listar();
+                request.setAttribute("pertrecho", lista);
+                break;
+            case "Agregar":
+                String tipoArma = request.getParameter("txtTipoArma");
+                String nombreArma = request.getParameter("txtNombre");
+                String descripcion = request.getParameter("txtDescripcion");
+                String codigo = request.getParameter("txtCodigo");
+                
+                pertrecho.setTipoArma(tipoArma);
+                pertrecho.setNombre(nombreArma);
+                pertrecho.setDescripcion(descripcion);
+                pertrecho.setCodigo(codigo);
+                pertrecho.setMensajeSalida("");
+                resultado = pertrechoDAO.agregar(pertrecho);
+                if (resultado == 0) {
+                    pertrecho.setMensajeSalida("Pertrecho creado exitosamente");
+                }
+                if (resultado == 1) {
+                    pertrecho.setMensajeSalida("El código de pertrecho ya existe");
+                }
+                request.setAttribute("respuesta", personalPolicial);
+                request.getRequestDispatcher("Controlador?menu=GestionPertrecho&accion=Listar").forward(request, response);
+                break;
+            case "Editar":
+                ide = Integer.parseInt(request.getParameter("id"));
+                Pertrecho p = pertrechoDAO.listarId(ide);
+                request.setAttribute("pertrechoEditar", p);
+                request.getRequestDispatcher("Controlador?menu=GestionPertrecho&accion=Listar").forward(request, response);
+                break;
+            case "Actualizar":
+                String tipoArmaAct = request.getParameter("txtTipoArma");
+                String nombreArmaAct = request.getParameter("txtNombre");
+                String descripcionAct = request.getParameter("txtDescripcion");
+                String codigoAct = request.getParameter("txtCodigo");
+                int cantidad = Integer.parseInt(request.getParameter("txtCantidad"));
+                pertrecho.setTipoArma(tipoArmaAct);
+                pertrecho.setNombre(nombreArmaAct);
+                pertrecho.setDescripcion(descripcionAct);
+                pertrecho.setCodigo(codigoAct);
+                pertrecho.setCantidad(cantidad);
+                pertrecho.setIdPertrecho(ide);
+                pertrechoDAO.actualizar(pertrecho);
+                request.getRequestDispatcher("Controlador?menu=GestionPertrecho&accion=Listar").forward(request, response);
+                break;
+            case "Delete":
+                ide = Integer.parseInt(request.getParameter("id"));
+                pertrechoDAO.delete(ide);
+                request.getRequestDispatcher("Controlador?menu=GestionPertrecho&accion=Listar").forward(request, response);
+                break;
+            default:
+                throw new AssertionError();
+        }
+        request.getRequestDispatcher("Pertrechos.jsp").forward(request, response);
+    
+    }
 }

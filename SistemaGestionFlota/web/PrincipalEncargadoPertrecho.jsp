@@ -19,26 +19,8 @@
                                 Administración
                             </button>
                             <div class="dropdown-menu text-center">
-                                <a style="margin-left: 10px; border: none" class="dropdown-item" href="Controlador?menu=Usuarios&accion=Listar" target="myFrame">Gestionar Usuarios</a>
-                                <a style="margin-left: 10px; border: none" class="dropdown-item" href="Controlador?menu=Personal&accion=Listar" target="myFrame">Gestionar Personal</a>
-                                <a style="margin-left: 10px; border: none" class="dropdown-item" href="Controlador?menu=Vehiculos&accion=Listar" target="myFrame">Gestionar Vehiculos</a>
-                            </div>
-                        </div>
-                        <div class="dropdown">
-                            <button style="border: none; width: 200px" class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
-                                Documentos
-                            </button>
-                            <div class="dropdown-menu text-center">
-                                <a style="margin-left: 10px; border: none" class="dropdown-item" href="Controlador?menu=Aprobacion&accion=Listar" target="myFrame">Aprobación de solicitudes</a>
-                                <a style="margin-left: 10px; border: none" class="dropdown-item" href="Controlador?menu=Finalizar&accion=Listar" target="myFrame">Finalizar Mantenimiento</a>
-                            </div>
-                        </div>
-                        <div class="dropdown">
-                            <button style="border: none; width: 200px" class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
-                                Reportes
-                            </button>
-                            <div class="dropdown-menu text-center">
-                                <a style="margin-left: 10px; border: none" class="dropdown-item" href="Controlador?menu=reporteReclamo" target="myFrame">Sugerencias y Reclamos</a>
+                                <a style="margin-left: 10px; border: none" class="dropdown-item" href="Controlador?menu=GestionPertrecho&accion=Listar" target="myFrame">Gestionar Pertrechos</a>
+                                <a style="margin-left: 10px; border: none" class="dropdown-item" href="Controlador?menu=AsignarPertrecho&accion=Listar" target="myFrame">Asgignar Pertrechos</a>
                             </div>
                         </div>
                     </ul>

@@ -96,6 +96,8 @@ public class ControladorValidar extends HttpServlet {
                     request.getRequestDispatcher("Controlador?menu=PrincipalEncargado").forward(request, response);
                 }else if (us.getCodigoRol().equals("002")) { //003 es el rol "Encargado" para el encargado de flota
                     request.getRequestDispatcher("Controlador?menu=PrincipalGerencia").forward(request, response);
+                }else if (us.getCodigoRol().equals("004")) { //004 es el rol "TECNICO3" para el encargado de Pertrechos
+                    request.getRequestDispatcher("Controlador?menu=PrincipalEncargadoPertrecho").forward(request, response);
                 }
             } else {
                 request.getRequestDispatcher("index.jsp").forward(request, response);

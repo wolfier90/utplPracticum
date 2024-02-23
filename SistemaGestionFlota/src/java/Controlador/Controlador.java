@@ -48,6 +48,9 @@ public class Controlador extends HttpServlet {
         if (menu.equals("PrincipalGerencia")) {
             request.getRequestDispatcher("PrincipalGerencia.jsp").forward(request, response);
         }
+        if (menu.equals("PrincipalEncargadoPertrecho")) {
+            request.getRequestDispatcher("PrincipalEncargadoPertrecho.jsp").forward(request, response);
+        }
         if (menu.equals("Usuarios")) {
             //Procesa las acciones CRUD del menu Usuarios
             controladorAcciones.procesaAccionUsuarios(request, response, accion);
@@ -79,6 +82,14 @@ public class Controlador extends HttpServlet {
         if (menu.equals("Reclamo")) {
             controladorAcciones.procesaAccionReclamo(request, response, accion);
             request.getRequestDispatcher("Reclamos.jsp").forward(request, response);
+        }
+        if (menu.equals("GestionPertrecho")) {
+            controladorAcciones.procesaAccionPertrecho(request, response, accion);
+            request.getRequestDispatcher("Pertrechos.jsp").forward(request, response);
+        }
+        if (menu.equals("AsignarPertrecho")) {
+            //controladorAcciones.procesaAccionReclamo(request, response, accion);
+            request.getRequestDispatcher("AsignarPertrecho.jsp").forward(request, response);
         }
     }
 
